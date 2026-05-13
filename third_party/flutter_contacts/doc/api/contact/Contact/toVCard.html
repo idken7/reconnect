@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the toVCard method from the Contact class, for the Dart programming language.">
+  <title>toVCard method - Contact class - contact library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../contact/contact-library.html">contact.dart</a></li>
+    <li><a href="../../contact/Contact-class.html">Contact</a></li>
+    <li class="self-crumb">toVCard method</li>
+  </ol>
+  <div class="self-name">toVCard</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="contact&#47;Contact-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">toVCard</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+<span class="name ">toVCard</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="toVCard-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="toVCard-param-productId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">productId</span>, </span></li>
+<li><span class="parameter" id="toVCard-param-includeDate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">includeDate</span> = <span class="default-value">false</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Exports to vCard format.</p>
+<p>By default we use vCard format v3 (<a href="https://tools.ietf.org/html/rfc2426">https://tools.ietf.org/html/rfc2426</a>)
+which is the most widely used, but it's possible to use the more recent
+vCard format v4 (<a href="https://tools.ietf.org/html/rfc6350">https://tools.ietf.org/html/rfc6350</a>) using:</p>
+<pre class="language-dart"><code class="language-dart">FlutterContacts.config.vCardVersion = VCardVersion.v4;
+</code></pre>
+<p>The optional <code>productId</code> specifies a product identifier, such as
+"-//Apple Inc.//Mac OS X 10.15.7//EN"</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">String toVCard({
+  bool withPhoto = true,
+  String? productId,
+  bool includeDate = false,
+}) {
+  &#47;&#47; BEGIN (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-2.1.1
+  &#47;&#47; VERSION (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.6.9
+  &#47;&#47; PRODID (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.6.3
+  &#47;&#47; REV (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.6.4
+  &#47;&#47; FN (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.1.1
+  &#47;&#47; PHOTO (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-3.1.4
+  &#47;&#47; END (V3): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc2426#section-2.1.1
+  &#47;&#47; BEGIN (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.1.1
+  &#47;&#47; VERSION (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.7.9
+  &#47;&#47; PRODID (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.7.3
+  &#47;&#47; REV (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.7.4
+  &#47;&#47; FN (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.2.1
+  &#47;&#47; PHOTO (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.2.4
+  &#47;&#47; END (V4): https:&#47;&#47;tools.ietf.org&#47;html&#47;rfc6350#section-6.1.2
+  final v4 = FlutterContacts.config.vCardVersion == VCardVersion.v4;
+  var lines = [
+    &#39;BEGIN:VCARD&#39;,
+    v4 ? &#39;VERSION:4.0&#39; : &#39;VERSION:3.0&#39;,
+  ];
+  if (productId != null) {
+    lines.add(&#39;PRODID:$productId&#39;);
+  }
+  if (includeDate) {
+    lines.add(&#39;REV:${DateTime.now().toIso8601String()}&#39;);
+  }
+  if (displayName.isNotEmpty) {
+    lines.add(&#39;FN:${vCardEncode(displayName)}&#39;);
+  }
+  if (withPhoto &amp;&amp; photoOrThumbnail != null) {
+    final encoding = vCardEncode(base64.encode(photoOrThumbnail!));
+    final prefix =
+        v4 ? &#39;PHOTO:data:image&#47;jpeg;base64,&#39; : &#39;PHOTO;ENCODING=b;TYPE=JPEG:&#39;;
+    lines.add(prefix + encoding);
+  }
+  lines.addAll([
+    name.toVCard(),
+    phones.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    emails.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    addresses.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    organizations.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    websites.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    socialMedias.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    events.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+    notes.map((x) =&gt; x.toVCard()).expand((x) =&gt; x),
+  ].expand((x) =&gt; x));
+  lines.add(&#39;END:VCARD&#39;);
+  return lines.join(&#39;\n&#39;);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../contact/contact-library.html">contact</a></li>
+    <li><a href="../../contact/Contact-class.html">Contact</a></li>
+    <li class="self-crumb">toVCard method</li>
+</ol>
+
+
+    <h5>Contact class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    flutter_contacts
+      1.1.9+2
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

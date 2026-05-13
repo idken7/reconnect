@@ -1,0 +1,12 @@
+analyzer:
+  exclude:
+    - build/**
+    - .dart_tool/**
+    - third_party/**
+
+linter:
+  rules:
+    avoid_print: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    sort_child_properties_last: true

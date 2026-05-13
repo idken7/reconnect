@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the getContacts method from the FlutterContacts class, for the Dart programming language.">
+  <title>getContacts method - FlutterContacts class - flutter_contacts library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts.dart</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
+    <li class="self-crumb">getContacts static method</li>
+  </ol>
+  <div class="self-name">getContacts</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="flutter_contacts&#47;FlutterContacts-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+<h1><span class="kind-method">getContacts</span> static method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../contact/Contact-class.html">Contact</a></span>&gt;</span></span>&gt;</span></span>
+<span class="name ">getContacts</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="getContacts-param-withProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withProperties</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-withThumbnail"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withThumbnail</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-withPhoto"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withPhoto</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-withGroups"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withGroups</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-withAccounts"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">withAccounts</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-sorted"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">sorted</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="getContacts-param-deduplicateProperties"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">deduplicateProperties</span> = <span class="default-value">true</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Fetches all contacts.</p>
+<p>By default only ID and display name are fetched. If <code>withProperties</code> is
+true, properties (phones, emails, addresses, websites, etc) are also
+fetched.</p>
+<p>If <code>withThumbnail</code> is true, the low-resolution thumbnail is also
+fetched. If <code>withPhoto</code> is true, the high-resolution photo is also
+fetched.</p>
+<p>If <code>withGroups</code> is true, it also returns the group information (called
+labels on Android and groups on iOS).</p>
+<p>If <code>withAccounts</code> is true, it also returns the account information. On
+Android this is the raw account, and there can be several accounts per
+unified contact (for example one for Gmail, one for Skype and one for
+WhatsApp). On iOS it is called container, and there can be only one
+container per contact.</p>
+<p>If <code>sorted</code> is true, the contacts are returned sorted by their
+normalized display names (ignoring case and diacritics).</p>
+<p>If <code>deduplicateProperties</code> is true, the properties will be de-duplicated,
+mainly to avoid the case (common on Android) where multiple equivalent
+phones are returned.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">static Future&lt;List&lt;Contact&gt;&gt; getContacts({
+  bool withProperties = false,
+  bool withThumbnail = false,
+  bool withPhoto = false,
+  bool withGroups = false,
+  bool withAccounts = false,
+  bool sorted = true,
+  bool deduplicateProperties = true,
+}) async =&gt;
+    _select(
+      withProperties: withProperties,
+      withThumbnail: withThumbnail,
+      withPhoto: withPhoto,
+      withGroups: withGroups,
+      withAccounts: withAccounts,
+      sorted: sorted,
+      deduplicateProperties: deduplicateProperties,
+    );</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">flutter_contacts</a></li>
+    <li><a href="../../flutter_contacts/flutter_contacts-library.html">flutter_contacts</a></li>
+    <li><a href="../../flutter_contacts/FlutterContacts-class.html">FlutterContacts</a></li>
+    <li class="self-crumb">getContacts static method</li>
+</ol>
+
+
+    <h5>FlutterContacts class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    flutter_contacts
+      1.1.9+2
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+

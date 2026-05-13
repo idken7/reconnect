@@ -1,0 +1,85 @@
+{
+  "users": [
+    {
+      "id": "seed-user-1",
+      "email": "avery@example.com",
+      "phone": "+14155550124",
+      "passwordHash": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+      "name": "Avery Stone",
+      "homeCity": "Brooklyn",
+      "bio": "Trying to reconnect with the people who made earlier chapters worth remembering.",
+      "createdAt": "2026-05-13T04:08:42.357168Z"
+    },
+    {
+      "id": "user-ivmcmID6o2FKKA",
+      "email": "test@yahoo.com",
+      "phone": "1234567890",
+      "passwordHash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "name": "Hi",
+      "homeCity": "Los Angeles",
+      "bio": "",
+      "createdAt": "2026-05-13T04:48:38.009366Z"
+    }
+  ],
+  "userStates": {
+    "seed-user-1": {
+      "currentLocation": "Brooklyn",
+      "contactsImported": false,
+      "contacts": [],
+      "matches": {
+        "mutual": [],
+        "oneWay": [],
+        "notOnApp": []
+      }
+    },
+    "user-ivmcmID6o2FKKA": {
+      "currentLocation": "Manhattan",
+      "contactsImported": true,
+      "contacts": [],
+      "matches": {
+        "mutual": [],
+        "oneWay": [],
+        "notOnApp": [
+          {
+            "name": "Anna Haro",
+            "status": "notOnApp"
+          },
+          {
+            "name": "Daniel Higgins Jr.",
+            "status": "notOnApp"
+          },
+          {
+            "name": "David Taylor",
+            "status": "notOnApp"
+          },
+          {
+            "name": "Hank M. Zakroff",
+            "status": "notOnApp"
+          },
+          {
+            "name": "John Appleseed",
+            "status": "notOnApp"
+          },
+          {
+            "name": "Kate Bell",
+            "status": "notOnApp"
+          }
+        ]
+      }
+    }
+  },
+  "accessSessions": [
+    {
+      "token": "cpGf17x5xDt3kJ8sBZKE3jOOCwE-7rzL",
+      "userId": "user-ivmcmID6o2FKKA",
+      "expiresAt": "2026-05-13T05:03:38.011079Z"
+    }
+  ],
+  "refreshSessions": [
+    {
+      "token": "24gRA2F-ng7zhthpNrDjXts_vIx3FIx5",
+      "userId": "user-ivmcmID6o2FKKA",
+      "expiresAt": "2026-06-12T04:48:38.011369Z"
+    }
+  ]
+}
