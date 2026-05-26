@@ -69,6 +69,29 @@ class _ReconnectAppState extends State<ReconnectApp> {
       );
     }
 
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Reconnect',
+      theme: theme,
+      home: _HomePage(appState: appState),
+    );
+  }
+}
+
+class _HomePage extends StatefulWidget {
+  final ReconnectAppState appState;
+
+  const _HomePage({required this.appState});
+
+  @override
+  State<_HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<_HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    final appState = widget.appState;
+    
     final pages = <Widget>[
       ContactsScreen(
         contactsImported: appState.contactsImported,
@@ -117,7 +140,6 @@ class _ReconnectAppState extends State<ReconnectApp> {
               builder: (context) => SpinWheelScreen(
                 contacts: appState.contacts,
                 onContactSpun: (contact) {
-                  // Handle contact selection
                   Navigator.of(context).pop();
                 },
               ),
@@ -166,58 +188,53 @@ class _ReconnectAppState extends State<ReconnectApp> {
       ),
     ];
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Reconnect',
-      theme: theme,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Reconnect'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Center(
-                child: Text(
-                  appState.currentLocation,
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reconnect'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Center(
+              child: Text(
+                appState.currentLocation,
+                style: Theme.of(context).textTheme.labelLarge,
               ),
             ),
-          ],
-        ),
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: KeyedSubtree(
-            key: ValueKey<int>(appState.currentIndex),
-            child: pages[appState.currentIndex],
           ),
+        ],
+      ),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: KeyedSubtree(
+          key: ValueKey<int>(appState.currentIndex),
+          child: pages[appState.currentIndex],
         ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: appState.currentIndex,
-          onDestinationSelected: appState.setIndex,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.people_outline),
-              selectedIcon: Icon(Icons.people),
-              label: 'Contacts',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.place_outlined),
-              selectedIcon: Icon(Icons.place),
-              label: 'Nearby',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.group_outlined),
-              selectedIcon: Icon(Icons.group),
-              label: 'Matches',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: appState.currentIndex,
+        onDestinationSelected: appState.setIndex,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.people_outline),
+            selectedIcon: Icon(Icons.people),
+            label: 'Contacts',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.place_outlined),
+            selectedIcon: Icon(Icons.place),
+            label: 'Nearby',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.group_outlined),
+            selectedIcon: Icon(Icons.group),
+            label: 'Matches',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
