@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+export 'models/activity_suggestion.dart';
+export 'models/conversation_starter.dart';
+export 'models/spin_history.dart';
+export 'models/suggestion_rating.dart';
+
 enum ReconnectPreference { loveToSee, neutral, ratherAvoid }
 
 extension ReconnectPreferenceLabel on ReconnectPreference {
@@ -55,6 +60,7 @@ class ReconnectProfile {
     required this.phone,
     required this.homeCity,
     required this.bio,
+    this.birthday,
   });
 
   factory ReconnectProfile.fromJson(Map<String, dynamic> json) {
@@ -64,6 +70,7 @@ class ReconnectProfile {
       phone: json['phone'] as String? ?? '',
       homeCity: json['homeCity'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
+      birthday: json['birthday'] != null ? DateTime.tryParse(json['birthday'] as String) : null,
     );
   }
 
@@ -72,6 +79,7 @@ class ReconnectProfile {
   final String phone;
   final String homeCity;
   final String bio;
+  final DateTime? birthday;
 
   Map<String, dynamic> toJson() {
     return {
@@ -80,7 +88,26 @@ class ReconnectProfile {
       'phone': phone,
       'homeCity': homeCity,
       'bio': bio,
+      'birthday': birthday?.toIso8601String(),
     };
+  }
+
+  ReconnectProfile copyWith({
+    String? name,
+    String? email,
+    String? phone,
+    String? homeCity,
+    String? bio,
+    DateTime? birthday,
+  }) {
+    return ReconnectProfile(
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      homeCity: homeCity ?? this.homeCity,
+      bio: bio ?? this.bio,
+      birthday: birthday ?? this.birthday,
+    );
   }
 }
 
@@ -94,6 +121,8 @@ class ReconnectContact {
     required this.lastSeen,
     required this.availableIn,
     required this.preference,
+    this.birthday,
+    this.lastContacted,
   });
 
   factory ReconnectContact.fromJson(Map<String, dynamic> json) {
@@ -111,6 +140,8 @@ class ReconnectContact {
         (value) => value.name == (json['preference'] as String? ?? ''),
         orElse: () => ReconnectPreference.neutral,
       ),
+      birthday: json['birthday'] != null ? DateTime.tryParse(json['birthday'] as String) : null,
+      lastContacted: json['lastContacted'] != null ? DateTime.tryParse(json['lastContacted'] as String) : null,
     );
   }
 
@@ -122,6 +153,8 @@ class ReconnectContact {
   final String lastSeen;
   final List<String> availableIn;
   final ReconnectPreference preference;
+  final DateTime? birthday;
+  final DateTime? lastContacted;
 
   Map<String, dynamic> toJson() {
     return {
@@ -133,6 +166,8 @@ class ReconnectContact {
       'lastSeen': lastSeen,
       'availableIn': availableIn,
       'preference': preference.name,
+      'birthday': birthday?.toIso8601String(),
+      'lastContacted': lastContacted?.toIso8601String(),
     };
   }
 
@@ -145,6 +180,8 @@ class ReconnectContact {
     String? lastSeen,
     List<String>? availableIn,
     ReconnectPreference? preference,
+    DateTime? birthday,
+    DateTime? lastContacted,
   }) {
     return ReconnectContact(
       id: id ?? this.id,
@@ -155,6 +192,8 @@ class ReconnectContact {
       lastSeen: lastSeen ?? this.lastSeen,
       availableIn: availableIn ?? this.availableIn,
       preference: preference ?? this.preference,
+      birthday: birthday ?? this.birthday,
+      lastContacted: lastContacted ?? this.lastContacted,
     );
   }
 }

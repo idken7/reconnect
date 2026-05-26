@@ -12,6 +12,9 @@ class ProfileScreen extends StatelessWidget {
     required this.onImportContacts,
     required this.onRankContacts,
     required this.onChangeLocation,
+    this.onSpinWheel,
+    this.onConversationStarter,
+    this.onActivitySuggestion,
   });
 
   final ReconnectProfile profile;
@@ -21,6 +24,9 @@ class ProfileScreen extends StatelessWidget {
   final VoidCallback onImportContacts;
   final VoidCallback onRankContacts;
   final VoidCallback onChangeLocation;
+  final VoidCallback? onSpinWheel;
+  final VoidCallback? onConversationStarter;
+  final VoidCallback? onActivitySuggestion;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +101,44 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 16),
+        if (onSpinWheel != null || onConversationStarter != null || onActivitySuggestion != null) ...[
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('Featured features', style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 12),
+                  if (onSpinWheel != null) ...[
+                    OutlinedButton.icon(
+                      onPressed: onSpinWheel,
+                      icon: const Icon(Icons.casino),
+                      label: const Text('Spin the wheel'),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  if (onConversationStarter != null) ...[
+                    OutlinedButton.icon(
+                      onPressed: onConversationStarter,
+                      icon: const Icon(Icons.chat_bubble_outline),
+                      label: const Text('Conversation starters'),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  if (onActivitySuggestion != null) ...[
+                    OutlinedButton.icon(
+                      onPressed: onActivitySuggestion,
+                      icon: const Icon(Icons.lightbulb_outline),
+                      label: const Text('Activity suggestions'),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }

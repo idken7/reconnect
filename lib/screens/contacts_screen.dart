@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models.dart';
+import '../widgets/birthday_reminder_card.dart';
 
 class ContactsScreen extends StatelessWidget {
   const ContactsScreen({
@@ -36,6 +37,9 @@ class ContactsScreen extends StatelessWidget {
           _StatusCard(message: statusMessage!),
           const SizedBox(height: 12),
         ],
+        // Birthday reminders
+        BirthdayReminderCard(contacts: contacts),
+        const SizedBox(height: 16),
         Text(
           'Who is already on Reconnect',
           style: Theme.of(context).textTheme.headlineSmall,

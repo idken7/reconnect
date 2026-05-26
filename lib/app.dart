@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'app_state.dart';
+import 'screens/activity_suggestion_screen.dart';
 import 'screens/contact_matches_screen.dart';
 import 'screens/contacts_screen.dart';
+import 'screens/conversation_starter_screen.dart';
 import 'screens/nearby_screen.dart';
 import 'screens/onboarding_flow.dart';
 import 'screens/profile_screen.dart';
+import 'screens/spin_wheel_screen.dart';
 
 class ReconnectApp extends StatefulWidget {
   const ReconnectApp({super.key});
@@ -108,6 +111,58 @@ class _ReconnectAppState extends State<ReconnectApp> {
         },
         onRankContacts: () => appState.setIndex(0),
         onChangeLocation: () => appState.setIndex(1),
+        onSpinWheel: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => SpinWheelScreen(
+                contacts: appState.contacts,
+                onContactSpun: (contact) {
+                  // Handle contact selection
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          );
+        },
+        onConversationStarter: () {
+          if (appState.contacts.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No contacts available')),
+            );
+            return;
+          }
+          final contact = appState.contacts.first;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ConversationStarterScreen(
+                contact: contact,
+                onSuggestionRated: (starter) {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          );
+        },
+        onActivitySuggestion: () {
+          if (appState.contacts.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No contacts available')),
+            );
+            return;
+          }
+          final contact = appState.contacts.first;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ActivitySuggestionScreen(
+                contact: contact,
+                userLocation: appState.currentLocation,
+                onSuggestionRated: (suggestion) {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          );
+        },
       ),
     ];
 

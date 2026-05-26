@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+import '../../config/environment.dart';
 import '../../models.dart';
 import '../contacts/contact_import_service.dart';
 
@@ -73,17 +73,8 @@ class ReconnectApiClient {
       return Uri.parse(configured);
     }
 
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return Uri.parse('http://10.0.2.2:8080');
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        return Uri.parse('http://127.0.0.1:8080');
-      case TargetPlatform.fuchsia:
-        return Uri.parse('http://127.0.0.1:8080');
-    }
+    final envConfig = EnvironmentService.instance;
+    return Uri.parse(envConfig.apiBaseUrl);
   }
 
   Future<ReconnectDashboardData> fetchDashboard({required String location}) async {

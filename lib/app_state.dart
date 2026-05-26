@@ -5,9 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/mock_reconnect_repository.dart';
 import 'models.dart';
+import 'services/activity_suggestion_service.dart';
 import 'services/backend/reconnect_api_client.dart';
+import 'services/birthday_reminder_service.dart';
 import 'services/contacts/contact_import_service.dart';
+import 'services/conversation_starter_service.dart';
 import 'services/location/live_location_service.dart';
+import 'services/random_contact_service.dart';
 
 class ReconnectAppState extends ChangeNotifier {
   ReconnectAppState({
@@ -24,6 +28,11 @@ class ReconnectAppState extends ChangeNotifier {
       contactsImported: false,
       contacts: const [],
     );
+    // Initialize feature services
+    randomContactService = RandomContactService();
+    conversationStarterService = ConversationStarterService();
+    activitySuggestionService = ActivitySuggestionService();
+    birthdayReminderService = BirthdayReminderService();
     unawaited(initialize());
   }
 
@@ -31,6 +40,12 @@ class ReconnectAppState extends ChangeNotifier {
   final ContactImportService contactImportService;
   final LiveLocationService liveLocationService;
   final MockReconnectRepository seedRepository;
+  
+  // Feature services
+  late final RandomContactService randomContactService;
+  late final ConversationStarterService conversationStarterService;
+  late final ActivitySuggestionService activitySuggestionService;
+  late final BirthdayReminderService birthdayReminderService;
 
   static const _tokenKey = 'reconnect_auth_token';
   static const _refreshTokenKey = 'reconnect_refresh_token';
@@ -63,6 +78,23 @@ class ReconnectAppState extends ChangeNotifier {
   List<ReconnectContact> get contacts => List.unmodifiable(_dashboard.contacts);
   List<NearbySuggestion> get nearbySuggestions => List.unmodifiable(_dashboard.suggestions);
   ContactMatches get matches => _matches;
+  
+  // Feature getters
+  ReconnectContact? getRandomContact({int daysThreshold = 90}) {
+    return randomContactService.getRandomContact(contacts, daysThreshold: daysThreshold);
+  }
+  
+  ConversationStarter getConversationStarter() {
+    return conversationStarterService.getRandomStarter();
+  }
+  
+  ActivitySuggestion getActivitySuggestion({String location = 'any'}) {
+    return activitySuggestionService.getRandomActivity(location: location);
+  }
+  
+  List<ReconnectContact> getUpcomingBirthdays() {
+    return birthdayReminderService.getUpcomingBirthdays(contacts);
+  }
 
   Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
