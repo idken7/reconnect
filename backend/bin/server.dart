@@ -582,12 +582,24 @@ class BackendState {
         continue;
       }
 
+      final sharedLocations = availableIn.where((loc) => loc != location).toList();
+      final contactName = contact['name'] as String? ?? '';
+      final lastSeen = contact['lastSeen'] as String? ?? '';
+      
+      final reason = _generateReasonText(
+        preference: preference,
+        contactName: contactName,
+        location: location,
+        lastSeen: lastSeen,
+        sharedLocations: sharedLocations,
+      );
+
       suggestions.add({
         'contact': contact,
-        'reason': preference == 'loveToSee'
-            ? 'Both of you are active in $location and this person is a top reconnect.'
-            : 'You and this contact overlap in $location right now.',
-        'distanceLabel': location == 'Brooklyn' ? 'Under 3 miles away' : 'Nearby',
+        'reason': reason,
+        'distanceLabel': location == 'Brooklyn' ? '<3 miles' : 'Nearby',
+        'sharedLocations': sharedLocations,
+        'timeSinceLastSeen': lastSeen,
       });
     }
 
@@ -601,6 +613,28 @@ class BackendState {
     });
 
     return suggestions;
+  }
+
+  String _generateReasonText({
+    required String preference,
+    required String contactName,
+    required String location,
+    required String lastSeen,
+    required List<String> sharedLocations,
+  }) {
+    if (preference == 'loveToSee') {
+      if (lastSeen.contains('ago')) {
+        return 'Last saw $contactName $lastSeen. Now both in $location.';
+      } else if (lastSeen == 'Unknown') {
+        return 'You flagged as a top reconnect. Both active in $location.';
+      }
+      return 'Top reconnect who is active in $location with you now.';
+    } else {
+      if (sharedLocations.isNotEmpty) {
+        return 'Also available in ${sharedLocations.join(', ')}. Now overlapping in $location.';
+      }
+      return 'You and this contact overlap in $location right now.';
+    }
   }
 
   int _preferenceWeight(String preference) {

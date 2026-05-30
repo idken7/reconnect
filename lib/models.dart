@@ -49,7 +49,7 @@ extension ReconnectPreferenceLabel on ReconnectPreference {
       case ReconnectPreference.dislike:
         return '😕';
       case ReconnectPreference.ratherAvoid:
-        return '😠';
+        return '☹️';
     }
   }
 
@@ -234,6 +234,8 @@ class NearbySuggestion {
     required this.contact,
     required this.reason,
     required this.distanceLabel,
+    this.sharedLocations = const <String>[],
+    this.timeSinceLastSeen = '',
   });
 
   factory NearbySuggestion.fromJson(Map<String, dynamic> json) {
@@ -241,18 +243,26 @@ class NearbySuggestion {
       contact: ReconnectContact.fromJson(json['contact'] as Map<String, dynamic>? ?? const <String, dynamic>{}),
       reason: json['reason'] as String? ?? '',
       distanceLabel: json['distanceLabel'] as String? ?? '',
+      sharedLocations: (json['sharedLocations'] as List<dynamic>? ?? const <dynamic>[])
+          .map((entry) => entry.toString())
+          .toList(growable: false),
+      timeSinceLastSeen: json['timeSinceLastSeen'] as String? ?? '',
     );
   }
 
   final ReconnectContact contact;
   final String reason;
   final String distanceLabel;
+  final List<String> sharedLocations;
+  final String timeSinceLastSeen;
 
   Map<String, dynamic> toJson() {
     return {
       'contact': contact.toJson(),
       'reason': reason,
       'distanceLabel': distanceLabel,
+      'sharedLocations': sharedLocations,
+      'timeSinceLastSeen': timeSinceLastSeen,
     };
   }
 }

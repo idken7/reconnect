@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../models.dart';
 
@@ -89,6 +90,61 @@ class _MatchList extends StatelessWidget {
   final List<MatchCandidate> items;
   final String badge;
 
+  Widget _buildBadge(String badge, MatchCandidate item) {
+    final tooltipText = _getTooltipText(badge);
+    
+    // For "Invite" badge, make it a button
+    if (badge == 'Invite') {
+      return Tooltip(
+        message: tooltipText,
+        child: TextButton(
+          onPressed: () => _handleInvite(item),
+          child: Chip(
+            label: const Text('Invite'),
+            labelStyle: const TextStyle(
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.blue,
+          ),
+        ),
+      );
+    }
+    
+    return Tooltip(
+      message: tooltipText,
+      child: Chip(
+        label: Text(badge),
+      ),
+    );
+  }
+
+  String _getInviteMessage(String contactName) {
+    return 'Hey $contactName! Let me reconnect with you on Reconnect! 🔗\n\n'
+        'Download the app to see who from your contacts wants to reconnect with you.\n'
+        'Reconnect App';
+  }
+
+  void _handleInvite(MatchCandidate item) {
+    final message = _getInviteMessage(item.name);
+    Share.share(
+      message,
+      subject: 'Join me on Reconnect!',
+    );
+  }
+
+  String _getTooltipText(String badge) {
+    switch (badge) {
+      case 'Mutual match':
+        return 'You both have each other in your top reconnect list';
+      case 'Discovered':
+        return 'This person has you in their reconnect list';
+      case 'Invite':
+        return 'This contact is not yet on Reconnect';
+      default:
+        return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
@@ -107,9 +163,7 @@ class _MatchList extends StatelessWidget {
           child: ListTile(
             title: Text(item.name),
             subtitle: Text(item.contact?.lastSeen ?? item.status ?? 'Not on app'),
-            trailing: Chip(
-              label: Text(badge),
-            ),
+            trailing: _buildBadge(badge, item),
           ),
         );
       },

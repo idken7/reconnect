@@ -362,14 +362,22 @@ class MockReconnectRepository {
             contact.preference != ReconnectPreference.ratherAvoid &&
             contact.availableIn.contains(location))
         .map((contact) {
-      final reason = contact.preference == ReconnectPreference.loveToSee
-          ? 'Both of you are active in $location and you flagged this person as a top reconnect.'
-          : 'You and this contact overlap in $location right now.';
+      final sharedLocations = contact.availableIn.length > 1 
+          ? contact.availableIn.where((loc) => loc != location).toList()
+          : <String>[];
+      
+      final reason = _generateReasonText(
+        contact: contact,
+        location: location,
+        sharedLocations: sharedLocations,
+      );
 
       return NearbySuggestion(
         contact: contact,
         reason: reason,
-        distanceLabel: location == 'Brooklyn' ? 'Under 3 miles away' : 'Nearby',
+        distanceLabel: location == 'Brooklyn' ? '<3 miles' : 'Nearby',
+        sharedLocations: sharedLocations,
+        timeSinceLastSeen: contact.lastSeen,
       );
     }).toList();
 
@@ -382,6 +390,26 @@ class MockReconnectRepository {
     });
 
     return suggestions;
+  }
+
+  String _generateReasonText({
+    required ReconnectContact contact,
+    required String location,
+    required List<String> sharedLocations,
+  }) {
+    if (contact.preference == ReconnectPreference.loveToSee) {
+      if (contact.lastSeen.contains('ago')) {
+        return 'Last saw ${contact.name} ${ contact.lastSeen}. Now both in $location.';
+      } else if (contact.lastSeen == 'Unknown') {
+        return 'You flagged as a top reconnect. Both active in $location.';
+      }
+      return 'Top reconnect who is active in $location with you now.';
+    } else {
+      if (sharedLocations.isNotEmpty) {
+        return 'Also available in ${sharedLocations.join(', ')}. Now overlapping in $location.';
+      }
+      return 'You and this contact overlap in $location right now.';
+    }
   }
 
   ReconnectDashboardData seedState({

@@ -48,17 +48,14 @@ class _PreferenceButton extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
+          width: 56,
+          height: 56,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            border: isSelected
-                ? Border.all(
-                    color: preference.color,
-                    width: 2,
-                  )
-                : Border.all(
-                    color: Colors.grey.shade300,
-                    width: 1,
-                  ),
+            border: Border.all(
+              color: isSelected ? preference.color : Colors.grey.shade300,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(12),
             color: isSelected
                 ? preference.color.withOpacity(0.1)
