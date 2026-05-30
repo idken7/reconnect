@@ -28,6 +28,8 @@ class ReconnectAppState extends ChangeNotifier {
       contactsImported: true,
       contacts: this.seedRepository.importedContacts,
     );
+    // Pre-populate matches with all on-app contacts in test environment
+    _matches = _generateMatchesFromContacts(this.seedRepository.importedContacts);
     // Initialize feature services
     randomContactService = RandomContactService();
     conversationStarterService = ConversationStarterService();
@@ -257,22 +259,7 @@ class ReconnectAppState extends ChangeNotifier {
         contactsImported: true,
         contacts: seedRepository.importedContacts,
       );
-      _matches = const ContactMatches(
-        mutual: <MatchCandidate>[
-          MatchCandidate(name: 'Jordan Patel', contact: ReconnectContact(
-            id: '1',
-            name: 'Jordan Patel',
-            email: 'jordan@example.com',
-            phone: '+1 (212) 555-0180',
-            isOnApp: true,
-            lastSeen: '2 weeks ago',
-            availableIn: <String>['Brooklyn', 'Manhattan'],
-            preference: ReconnectPreference.loveToSee,
-          )),
-        ],
-        oneWay: <MatchCandidate>[],
-        notOnApp: <MatchCandidate>[],
-      );
+      _matches = _generateMatchesFromContacts(seedRepository.importedContacts);
       _errorMessage = 'Contact import synced in demo mode because the backend is unavailable.';
     } finally {
       _isImporting = false;
@@ -376,5 +363,37 @@ class ReconnectAppState extends ChangeNotifier {
     await prefs.remove(_refreshTokenKey);
     await prefs.remove(_tokenExpiryKey);
     await prefs.remove(_onboardingKey);
+  }
+
+  /// Generate mock matches from contacts for test environment
+  /// Separates contacts into mutual (on-app) and notOnApp categories
+  ContactMatches _generateMatchesFromContacts(List<ReconnectContact> contacts) {
+    final mutual = <MatchCandidate>[];
+    final notOnApp = <MatchCandidate>[];
+
+    for (final contact in contacts) {
+      if (contact.isOnApp) {
+        mutual.add(
+          MatchCandidate(
+            name: contact.name,
+            contact: contact,
+          ),
+        );
+      } else {
+        notOnApp.add(
+          MatchCandidate(
+            name: contact.name,
+            status: 'Not on app',
+            contact: contact,
+          ),
+        );
+      }
+    }
+
+    return ContactMatches(
+      mutual: mutual,
+      oneWay: const <MatchCandidate>[],
+      notOnApp: notOnApp,
+    );
   }
 }
