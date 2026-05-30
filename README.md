@@ -36,10 +36,62 @@ flutter pub get
 flutter run
 ```
 
-Use one of the following test credentials after the backend is running:
+## Test Environment with Sample Contacts
 
-- Seed account email: `avery@example.com`
-- Seed account password: `password123`
+The **easiest way to test the app** is to use the built-in test environment with 30 pre-loaded sample contacts.
+
+### Quick Start (No Backend Required)
+
+1. Start the app:
+   ```bash
+   flutter run
+   ```
+
+2. Skip onboarding:
+   - Tap "Skip for now" or complete the onboarding flow
+
+3. You'll see all features immediately with sample data:
+   - **30 test contacts** (27 on the app, 3 off-app for variety)
+   - **Spin the Wheel** - Tap to find a random contact to reach out to
+   - **Conversation Starters** - Context-based conversation prompts
+   - **Activity Suggestions** - Recommended activities based on location and interests
+   - **Birthday Reminders** - Upcoming birthdays from your contacts
+
+### What's Pre-Loaded
+
+The test environment includes:
+- 30 mock contacts with realistic profiles
+- Contacts spread across 4 locations: Brooklyn, Manhattan, Austin, Chicago
+- Varied activity preferences (love to see, neutral, rather avoid)
+- Mixed "on app" status for complete testing
+- Birthday information for testing reminders
+- Conversation starters and activity suggestions for each location
+
+### How It Works
+
+- The app detects the test environment and automatically loads sample contacts on startup
+- No manual contact import needed (the "Import contacts" button is still available)
+- All features are fully functional with the test data
+- Perfect for UI/UX testing, feature validation, and performance testing
+
+### With Backend (Optional for Auth Testing)
+
+If you want to test the backend authentication flow:
+
+```bash
+# Terminal 1: Start backend
+cd backend
+dart pub get
+dart run bin/server.dart
+
+# Terminal 2: Run app
+cd ..
+flutter run
+```
+
+Then use test credentials:
+- Email: `avery@example.com`
+- Password: `password123`
 
 ## Backend URLs
 
@@ -48,6 +100,22 @@ Use one of the following test credentials after the backend is running:
 - Override with `RECONNECT_API_BASE_URL` if needed
 
 ## Android (Emulator) Spin-up and Test
+
+### Quick Test with Sample Contacts (No Backend)
+
+1. Start an Android emulator:
+   ```bash
+   flutter devices  # Verify emulator is visible
+   flutter run -d android
+   ```
+
+2. The app will start with 30 pre-loaded test contacts. Test these features:
+   - Tap "Featured features" section to access Spin the Wheel, Conversation Starters, Activity Suggestions
+   - Try the Spin the Wheel feature (Profile tab → Spin the Wheel button)
+   - View conversation starters and activity suggestions
+   - Check birthday reminders
+
+### With Backend (For Auth Testing)
 
 1. Start backend first:
 
@@ -70,13 +138,36 @@ flutter run -d android
 ```
 
 4. Test auth + reconnect flow:
-- Sign in with `avery@example.com` / `password123`
-- Complete onboarding
-- Import contacts
-- Open Matches tab and verify grouped results
-- Open Nearby tab and tap live location refresh
+   - Sign in with `avery@example.com` / `password123`
+   - Complete onboarding
+   - Import contacts
+   - Open Matches tab and verify grouped results
+   - Open Nearby tab and tap live location refresh
 
 ## iOS (Simulator) Spin-up and Test
+
+### Quick Test with Sample Contacts (No Backend)
+
+1. Ensure Xcode and iOS Simulator are installed.
+2. Verify iOS simulator target:
+
+```bash
+flutter devices
+```
+
+3. Run app on iOS simulator:
+
+```bash
+flutter run -d ios
+```
+
+4. The app will start with 30 pre-loaded test contacts. Test these features:
+   - Tap "Featured features" section to access Spin the Wheel, Conversation Starters, Activity Suggestions
+   - Try the Spin the Wheel feature (Profile tab → Spin the Wheel button)
+   - View conversation starters and activity suggestions
+   - Check birthday reminders
+
+### With Backend (For Auth Testing)
 
 1. Ensure Xcode and iOS Simulator are installed.
 2. Start backend first:
@@ -99,7 +190,9 @@ flutter devices
 flutter run -d ios
 ```
 
-5. Test the same auth/import/matches/location flow as Android.
+5. Test the same auth/import/matches/location flow as Android using:
+   - Email: `avery@example.com`
+   - Password: `password123`
 
 ## Full Validation Commands
 
