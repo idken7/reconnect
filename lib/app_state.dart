@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'config/environment.dart';
 import 'data/mock_reconnect_repository.dart';
 import 'models.dart';
 import 'services/activity_suggestion_service.dart';
@@ -105,6 +106,15 @@ class ReconnectAppState extends ChangeNotifier {
     final tokenExpiryRaw = prefs.getString(_tokenExpiryKey);
     final tokenExpiry = tokenExpiryRaw == null ? null : DateTime.tryParse(tokenExpiryRaw)?.toUtc();
     _onboardingComplete = prefs.getBool(_onboardingKey) ?? false;
+    
+    // In development mode without any auth data, mark onboarding complete to show test data
+    if (EnvironmentService.instance.isDevelopment && _authToken == null && !_onboardingComplete) {
+      _onboardingComplete = true;
+      await prefs.setBool(_onboardingKey, true);
+      // Create a dummy auth token so the app shows the home page
+      _authToken = 'dev-token-for-testing';
+    }
+    
     apiClient.setAuthSession(
       accessToken: _authToken,
       refreshToken: refreshToken,
