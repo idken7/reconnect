@@ -106,15 +106,6 @@ class ReconnectAppState extends ChangeNotifier {
     final tokenExpiryRaw = prefs.getString(_tokenExpiryKey);
     final tokenExpiry = tokenExpiryRaw == null ? null : DateTime.tryParse(tokenExpiryRaw)?.toUtc();
     _onboardingComplete = prefs.getBool(_onboardingKey) ?? false;
-    
-    // In development mode without any auth data, mark onboarding complete to show test data
-    if (EnvironmentService.instance.isDevelopment && _authToken == null && !_onboardingComplete) {
-      _onboardingComplete = true;
-      await prefs.setBool(_onboardingKey, true);
-      // Create a dummy auth token so the app shows the home page
-      _authToken = 'dev-token-for-testing';
-    }
-    
     apiClient.setAuthSession(
       accessToken: _authToken,
       refreshToken: refreshToken,
@@ -136,12 +127,33 @@ class ReconnectAppState extends ChangeNotifier {
         _dashboard = await apiClient.fetchDashboard(location: _dashboard.currentLocation);
         _matches = await apiClient.fetchContactMatches();
         await _persistFromApiClient();
-      } catch (_) {
-        await _clearSessionStorage();
-        _authToken = null;
-        _onboardingComplete = false;
-        apiClient.setAuthSession(accessToken: null, refreshToken: null, accessTokenExpiresAt: null);
-        _errorMessage = 'Session expired. Please log in again.';
+      } catch (e) {
+        // If API call failed, load mock data as fallback
+        // Only clear session if we explicitly detect authentication failure
+        bool isExplicitAuthFailure = false;
+        
+        // Check if it's a ReconnectApiException with auth error
+        if (e is ReconnectApiException && (e.statusCode == 401 || e.statusCode == 403)) {
+          isExplicitAuthFailure = true;
+        }
+        
+        if (isExplicitAuthFailure) {
+          // Clear session if token is invalid or session was revoked
+          await _clearSessionStorage();
+          _authToken = null;
+          _onboardingComplete = false;
+          apiClient.setAuthSession(accessToken: null, refreshToken: null, accessTokenExpiresAt: null);
+          _errorMessage = 'Session expired. Please log in again.';
+        } else {
+          // Fallback: use mock data when API is unavailable or other errors occur
+          _dashboard = seedRepository.seedState(
+            location: _dashboard.currentLocation,
+            contactsImported: true,
+            contacts: seedRepository.importedContacts,
+          );
+          _matches = _generateMatchesFromContacts(seedRepository.importedContacts);
+          _errorMessage = 'Using demo data. Backend is unavailable.';
+        }
       }
     }
 
