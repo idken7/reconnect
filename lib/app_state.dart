@@ -24,13 +24,12 @@ class ReconnectAppState extends ChangeNotifier {
         contactImportService = contactImportService ?? const ContactImportService(),
         liveLocationService = liveLocationService ?? const LiveLocationService(),
         seedRepository = seedRepository ?? const MockReconnectRepository() {
+    // Initialize with empty state; will be populated by initialize()
     _dashboard = this.seedRepository.seedState(
       location: this.seedRepository.profile.homeCity,
-      contactsImported: true,
-      contacts: this.seedRepository.importedContacts,
+      contactsImported: false,
+      contacts: const [],
     );
-    // Pre-populate matches with all on-app contacts in test environment
-    _matches = _generateMatchesFromContacts(this.seedRepository.importedContacts);
     // Initialize feature services
     randomContactService = RandomContactService();
     conversationStarterService = ConversationStarterService();
@@ -154,6 +153,27 @@ class ReconnectAppState extends ChangeNotifier {
           _matches = _generateMatchesFromContacts(seedRepository.importedContacts);
           _errorMessage = 'Using demo data. Backend is unavailable.';
         }
+      }
+    } else {
+      // Not authenticated - load mock data for development/testing
+      _dashboard = seedRepository.seedState(
+        location: seedRepository.profile.homeCity,
+        contactsImported: true,
+        contacts: seedRepository.importedContacts,
+      );
+      _matches = _generateMatchesFromContacts(seedRepository.importedContacts);
+      // In development mode (but not in test environment), auto-complete onboarding to show the app
+      final bindingType = WidgetsBinding.instance.runtimeType.toString();
+      final isTestEnvironment = bindingType.contains('Test');
+      if (EnvironmentService.instance.isDevelopment && !_onboardingComplete && !isTestEnvironment) {
+        _onboardingComplete = true;
+        // Create a dummy auth token so state looks authenticated
+        _authToken = 'dev-mode-test-token';
+        apiClient.setAuthSession(
+          accessToken: _authToken,
+          refreshToken: null,
+          accessTokenExpiresAt: DateTime.now().add(const Duration(hours: 1)),
+        );
       }
     }
 
