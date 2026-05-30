@@ -93,17 +93,21 @@ class _SpinWheelScreenState extends State<SpinWheelScreen> with TickerProviderSt
                         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 12),
-                      SegmentedButton<int>(
-                        segments: const [
-                          ButtonSegment(value: 30, label: Text('1 month')),
-                          ButtonSegment(value: 90, label: Text('3 months')),
-                          ButtonSegment(value: 180, label: Text('6 months')),
-                          ButtonSegment(value: 365, label: Text('1 year')),
-                        ],
-                        selected: {_daysThreshold},
-                        onSelectionChanged: (value) {
-                          setState(() => _daysThreshold = value.first);
-                        },
+                      // Use a fixed-height container to prevent layout shifts
+                      SizedBox(
+                        height: 50,
+                        child: SegmentedButton<int>(
+                          segments: const [
+                            ButtonSegment(value: 30, label: Text('1 mo')),
+                            ButtonSegment(value: 90, label: Text('3 mo')),
+                            ButtonSegment(value: 180, label: Text('6 mo')),
+                            ButtonSegment(value: 365, label: Text('1 yr')),
+                          ],
+                          selected: {_daysThreshold},
+                          onSelectionChanged: (value) {
+                            setState(() => _daysThreshold = value.first);
+                          },
+                        ),
                       ),
                     ],
                   ),
