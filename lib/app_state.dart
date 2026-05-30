@@ -25,8 +25,8 @@ class ReconnectAppState extends ChangeNotifier {
         seedRepository = seedRepository ?? const MockReconnectRepository() {
     _dashboard = this.seedRepository.seedState(
       location: this.seedRepository.profile.homeCity,
-      contactsImported: false,
-      contacts: const [],
+      contactsImported: true,
+      contacts: this.seedRepository.importedContacts,
     );
     // Initialize feature services
     randomContactService = RandomContactService();

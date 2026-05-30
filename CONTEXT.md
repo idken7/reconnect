@@ -138,10 +138,23 @@ MaterialApp
   - Multiple locations (Brooklyn, Manhattan, Austin, Chicago)
   - Varied activity preferences (loveToSee, neutral, ratherAvoid)
   - Mixed app availability (isOnApp: true/false)
-  - Distributed lastSeen timestamps for realistic testing
-  - All have `lastContacted: null` for feature compatibility
+  - **27 contacts with `isOnApp: true`** for feature testing
+  - 3 contacts with `isOnApp: false` for off-app scenarios
+- Distributed lastSeen timestamps for realistic testing
+- All have `lastContacted: null` for feature compatibility
 
 **Data Quality:** 30 contacts is sufficient for testing without overwhelming the test data
+
+### 3. ✅ Pre-loaded Contacts in Test Environment
+
+**Problem:** Conversation Starters and Activity Suggestions required contacts with `isOnApp: true`, but users had to manually import contacts first in the test environment
+
+**Solution:** `lib/app_state.dart` (lines 26-30)
+- Changed app initialization to pre-load mock contacts automatically
+- Set `contactsImported: true` and seeded with `seedRepository.importedContacts` on startup
+- Test environment now shows all 30 mock contacts immediately
+
+**Result:** ✅ All features (Spin Wheel, Conversation Starters, Activity Suggestions, Birthday Reminders) work immediately on app launch in test environment
 
 ### 3. ✅ Test Suite Verification
 
@@ -206,10 +219,22 @@ MaterialApp
 ### Test Environment Setup
 
 **Available in `lib/data/mock_reconnect_repository.dart`:**
-- 30 mock contacts with varied characteristics
+- 30 mock contacts with varied characteristics:
+  - **27 contacts with `isOnApp: true`** (available for Conversation Starters & Activity Suggestions)
+  - 3 contacts with `isOnApp: false` (for testing off-app scenarios)
+  - Multiple locations (Brooklyn, Manhattan, Austin, Chicago)
+  - Varied activity preferences (loveToSee, neutral, ratherAvoid)
 - Mock conversation starters (12+ examples)
 - Mock activity suggestions (10+ examples)
 - All test data uses seeded randomness for reproducibility
+
+**Pre-loaded Contacts:** All mock contacts are automatically loaded on app startup in the test environment. This enables immediate testing of:
+- ✅ Spin the Wheel
+- ✅ Conversation Starters
+- ✅ Activity Suggestions
+- ✅ Birthday Reminders
+
+(No "Import contacts" button needed in test environment)
 
 ### Running Tests
 
@@ -484,5 +509,5 @@ For continuity across sessions, all work is tracked in checkpoints. Review:
 
 ---
 
-**Last Status:** ✅ All features working, UI polish complete, ready for testing  
-**Next Steps:** Monitor app performance during testing, gather user feedback, iterate on features
+**Last Status:** ✅ All features working, UI polish complete, test contacts pre-loaded  
+**Next Steps:** Test all features in app (Spin Wheel, Conversation Starters, Activity Suggestions), verify performance is snappy, iterate on user feedback
