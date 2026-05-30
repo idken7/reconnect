@@ -218,6 +218,13 @@ MaterialApp
 
 ### Test Environment Setup
 
+**Auto-Loading of Mock Data:**
+When you run `flutter run` in development mode with no backend:
+1. App starts and initializes
+2. If no authentication token is found, the app automatically loads 30 mock contacts
+3. Onboarding is skipped (dummy auth token is created)
+4. You immediately see the Home page with test data ready for use
+
 **Available in `lib/data/mock_reconnect_repository.dart`:**
 - 30 mock contacts with varied characteristics:
   - **27 contacts with `isOnApp: true`** (available for Conversation Starters & Activity Suggestions)
@@ -233,6 +240,12 @@ MaterialApp
 - ✅ Conversation Starters
 - ✅ Activity Suggestions
 - ✅ Birthday Reminders
+
+**Technical Details:**
+- App initialization (in `lib/app_state.dart`'s `initialize()` method) detects test environment via `WidgetsBinding` type
+- Test environment detection prevents auto-skipping onboarding during unit/widget tests
+- Users running `flutter run` see the app with test data immediately
+- Tests still follow normal onboarding flow
 
 (No "Import contacts" button needed in test environment)
 
