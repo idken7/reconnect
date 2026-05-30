@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'config/environment.dart';
 import 'screens/activity_suggestion_screen.dart';
+import 'screens/contact_detail_screen.dart';
 import 'screens/contact_matches_screen.dart';
 import 'screens/contacts_screen.dart';
 import 'screens/conversation_starter_screen.dart';
@@ -141,7 +142,11 @@ class _HomePageState extends State<_HomePage> {
               builder: (context) => SpinWheelScreen(
                 contacts: appState.contacts,
                 onContactSpun: (contact) {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => ContactDetailScreen(contact: contact),
+                    ),
+                  );
                 },
               ),
             ),
