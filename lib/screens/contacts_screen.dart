@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models.dart';
 import '../widgets/birthday_reminder_card.dart';
+import '../widgets/preference_selector.dart';
 
 class ContactsScreen extends StatelessWidget {
   const ContactsScreen({
@@ -133,48 +134,50 @@ class _ContactCard extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 4),
-                      Text(contact.lastSeen),
+                      Tooltip(
+                        message: 'Time since last contact',
+                        child: Text(
+                          contact.lastSeen,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Chip(
-                  label: Text(contact.isOnApp ? 'On app' : 'Not on app'),
-                  avatar: Icon(
+                Tooltip(
+                  message: contact.isOnApp ? 'On app' : 'Not on app',
+                  child: Icon(
                     contact.isOnApp ? Icons.verified_outlined : Icons.person_search_outlined,
-                    size: 18,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                _PreferenceChip(
-                  label: ReconnectPreference.loveToSee.shortLabel,
-                  color: ReconnectPreference.loveToSee.color,
-                  selected: contact.preference == ReconnectPreference.loveToSee,
-                  onTap: () => onPreferenceChanged(ReconnectPreference.loveToSee),
-                ),
-                _PreferenceChip(
-                  label: ReconnectPreference.neutral.shortLabel,
-                  color: ReconnectPreference.neutral.color,
-                  selected: contact.preference == ReconnectPreference.neutral,
-                  onTap: () => onPreferenceChanged(ReconnectPreference.neutral),
-                ),
-                _PreferenceChip(
-                  label: ReconnectPreference.ratherAvoid.shortLabel,
-                  color: ReconnectPreference.ratherAvoid.color,
-                  selected: contact.preference == ReconnectPreference.ratherAvoid,
-                  onTap: () => onPreferenceChanged(ReconnectPreference.ratherAvoid),
-                ),
-              ],
+            PreferenceSelectorWidget(
+              selected: contact.preference,
+              onChanged: onPreferenceChanged,
             ),
             const SizedBox(height: 12),
-            Text(
-              'Available in: ${contact.availableIn.join(', ')}',
-              style: Theme.of(context).textTheme.bodySmall,
+            Row(
+              children: [
+                Icon(
+                  Icons.location_on,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                const SizedBox(width: 4),
+                Tooltip(
+                  message: 'Available in: ${contact.availableIn.join(', ')}',
+                  child: Text(
+                    contact.availableIn.join(', '),
+                    style: Theme.of(context).textTheme.bodySmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -196,33 +199,6 @@ class _StatusCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Text(message),
       ),
-    );
-  }
-}
-
-class _PreferenceChip extends StatelessWidget {
-  const _PreferenceChip({
-    required this.label,
-    required this.color,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final Color color;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      selectedColor: color.withValues(alpha: 0.16),
-      labelStyle: TextStyle(
-        color: selected ? color : Theme.of(context).colorScheme.onSurfaceVariant,
-      ),
-      onSelected: (_) => onTap(),
     );
   }
 }

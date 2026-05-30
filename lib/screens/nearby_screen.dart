@@ -107,12 +107,46 @@ class NearbyScreen extends StatelessWidget {
         else
           for (final suggestion in suggestions) ...[
             Card(
-              child: ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.people_alt_outlined)),
-                title: Text(suggestion.contact.name),
-                subtitle: Text('${suggestion.distanceLabel}\n${suggestion.reason}'),
-                isThreeLine: true,
-                trailing: Text(suggestion.contact.preference.shortLabel),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: suggestion.contact.preference.color.withOpacity(0.2),
+                      child: Text(
+                        suggestion.contact.preference.emoji,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            suggestion.contact.name,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            suggestion.distanceLabel,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            suggestion.reason,
+                            style: Theme.of(context).textTheme.bodySmall,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 12),

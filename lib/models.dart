@@ -5,15 +5,19 @@ export 'models/conversation_starter.dart';
 export 'models/spin_history.dart';
 export 'models/suggestion_rating.dart';
 
-enum ReconnectPreference { loveToSee, neutral, ratherAvoid }
+enum ReconnectPreference { loveToSee, like, neutral, dislike, ratherAvoid }
 
 extension ReconnectPreferenceLabel on ReconnectPreference {
   String get label {
     switch (this) {
       case ReconnectPreference.loveToSee:
         return 'People I\'d love to see';
+      case ReconnectPreference.like:
+        return 'People I like';
       case ReconnectPreference.neutral:
         return 'Neutral';
+      case ReconnectPreference.dislike:
+        return 'People I\'d rather not see';
       case ReconnectPreference.ratherAvoid:
         return 'People I\'d rather avoid';
     }
@@ -23,10 +27,29 @@ extension ReconnectPreferenceLabel on ReconnectPreference {
     switch (this) {
       case ReconnectPreference.loveToSee:
         return 'Love';
+      case ReconnectPreference.like:
+        return 'Like';
       case ReconnectPreference.neutral:
         return 'Neutral';
+      case ReconnectPreference.dislike:
+        return 'Dislike';
       case ReconnectPreference.ratherAvoid:
         return 'Avoid';
+    }
+  }
+
+  String get emoji {
+    switch (this) {
+      case ReconnectPreference.loveToSee:
+        return '😍';
+      case ReconnectPreference.like:
+        return '🙂';
+      case ReconnectPreference.neutral:
+        return '😐';
+      case ReconnectPreference.dislike:
+        return '😕';
+      case ReconnectPreference.ratherAvoid:
+        return '😠';
     }
   }
 
@@ -34,19 +57,27 @@ extension ReconnectPreferenceLabel on ReconnectPreference {
     switch (this) {
       case ReconnectPreference.loveToSee:
         return 0;
-      case ReconnectPreference.neutral:
+      case ReconnectPreference.like:
         return 1;
-      case ReconnectPreference.ratherAvoid:
+      case ReconnectPreference.neutral:
         return 2;
+      case ReconnectPreference.dislike:
+        return 3;
+      case ReconnectPreference.ratherAvoid:
+        return 4;
     }
   }
 
   Color get color {
     switch (this) {
       case ReconnectPreference.loveToSee:
-        return const Color(0xFF1976D2);
+        return const Color(0xFF4CAF50);
+      case ReconnectPreference.like:
+        return const Color(0xFF8BC34A);
       case ReconnectPreference.neutral:
         return const Color(0xFF607D8B);
+      case ReconnectPreference.dislike:
+        return const Color(0xFFFF9800);
       case ReconnectPreference.ratherAvoid:
         return const Color(0xFFE57373);
     }
