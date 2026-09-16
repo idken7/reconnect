@@ -138,7 +138,7 @@ ThemeData buildReconnectTheme() {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: ReconnectColors.ink,
-        side: BorderSide(color: ReconnectColors.hairline),
+        side: const BorderSide(color: ReconnectColors.hairline),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
         textStyle: quicksand.labelLarge?.copyWith(fontWeight: FontWeight.w700, fontSize: 15),
@@ -150,11 +150,11 @@ ThemeData buildReconnectTheme() {
     chipTheme: ChipThemeData(
       backgroundColor: ReconnectColors.chipBackground,
       selectedColor: ReconnectColors.accent.withValues(alpha: 0.18),
-      labelStyle: TextStyle(color: ReconnectColors.chipForeground, fontWeight: FontWeight.w700),
+      labelStyle: const TextStyle(color: ReconnectColors.chipForeground, fontWeight: FontWeight.w700),
       shape: const StadiumBorder(),
       side: BorderSide.none,
     ),
-    dividerTheme: DividerThemeData(color: ReconnectColors.hairline, space: 1),
+    dividerTheme: const DividerThemeData(color: ReconnectColors.hairline, space: 1),
     tabBarTheme: TabBarThemeData(
       indicator: BoxDecoration(
         borderRadius: BorderRadius.circular(11),
@@ -179,11 +179,11 @@ ThemeData buildReconnectTheme() {
       fillColor: Colors.white,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: ReconnectColors.hairline),
+        borderSide: const BorderSide(color: ReconnectColors.hairline),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: ReconnectColors.hairline),
+        borderSide: const BorderSide(color: ReconnectColors.hairline),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),

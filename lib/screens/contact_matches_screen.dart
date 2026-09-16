@@ -82,7 +82,7 @@ class _ContactMatchesScreenState extends State<ContactMatchesScreen> {
               children: [
                 Text('Matches', style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 20),
-                Text(
+                const Text(
                   'No matches found yet. Import contacts first to see who is already on Reconnect.',
                   style: TextStyle(fontWeight: FontWeight.w600, color: ReconnectColors.mutedText),
                 ),
@@ -108,7 +108,7 @@ class _ContactMatchesScreenState extends State<ContactMatchesScreen> {
                 children: [
                   Text('Matches', style: Theme.of(context).textTheme.headlineMedium),
                   const SizedBox(height: 4),
-                  Text(
+                  const Text(
                     'People already on Reconnect, found through your contacts.',
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
                   ),
@@ -151,7 +151,7 @@ class _ContactMatchesScreenState extends State<ContactMatchesScreen> {
             Expanded(
               child: items.isEmpty
                   ? Center(
-                      child: Text(_emptyMessageFor(_tab), style: TextStyle(color: ReconnectColors.mutedText, fontWeight: FontWeight.w600)),
+                      child: Text(_emptyMessageFor(_tab), style: const TextStyle(color: ReconnectColors.mutedText, fontWeight: FontWeight.w600)),
                     )
                   : ListView.separated(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
@@ -202,7 +202,7 @@ class _MatchRow extends StatelessWidget {
                 Text(item.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
                 Text(
                   item.contact?.lastSeen ?? item.status ?? 'Not on app',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
                 ),
               ],
             ),
@@ -213,7 +213,7 @@ class _MatchRow extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(color: ReconnectColors.chipBackground, borderRadius: BorderRadius.circular(10)),
-              child: Text(badgeText, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: ReconnectColors.chipForeground)),
+              child: Text(badgeText, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: ReconnectColors.chipForeground)),
             ),
         ],
       ),

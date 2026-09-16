@@ -135,7 +135,7 @@ void main() {
       // (rather than the lane's own horizontal scroll) from the direction
       // of the first move, so step vertically toward the target in a few
       // increments rather than jumping straight there.
-      final steps = 5;
+      const steps = 5;
       for (var i = 1; i <= steps; i++) {
         await gesture.moveTo(Offset.lerp(start, end, i / steps)!);
         await tester.pump(const Duration(milliseconds: 16));

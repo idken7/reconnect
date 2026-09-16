@@ -371,7 +371,7 @@ class _SpinWheelScreenState extends State<SpinWheelScreen> with TickerProviderSt
                               _selectedContact = null;
                             }),
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('1 week', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ReconnectColors.mutedTextStrong)),
@@ -385,7 +385,7 @@ class _SpinWheelScreenState extends State<SpinWheelScreen> with TickerProviderSt
             Text(
               '${_eligibleContacts.length} people eligible',
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
             ),
             const SizedBox(height: 20),
             Center(
@@ -424,13 +424,13 @@ class _SpinWheelScreenState extends State<SpinWheelScreen> with TickerProviderSt
                           ),
                         ),
                       ),
-                      Positioned(
+                      const Positioned(
                         top: -14,
                         child: Icon(
                           Icons.arrow_drop_down_rounded,
                           size: 40,
                           color: ReconnectColors.ink,
-                          shadows: const [Shadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
+                          shadows: [Shadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
                         ),
                       ),
                     ],
@@ -487,12 +487,12 @@ class _SpinWheelScreenState extends State<SpinWheelScreen> with TickerProviderSt
                                 Text(_selectedContact!.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                                 Text(
                                   _randomService.getTimeSinceLastContact(_selectedContact!),
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
+                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
                                 ),
                               ],
                             ),
                           ),
-                          Icon(Icons.chevron_right_rounded, color: ReconnectColors.mutedTextStrong),
+                          const Icon(Icons.chevron_right_rounded, color: ReconnectColors.mutedTextStrong),
                         ],
                       ),
                     ),

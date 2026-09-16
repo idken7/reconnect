@@ -148,7 +148,7 @@ class _NearbyCard extends StatelessWidget {
                     Expanded(child: Text(contact.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15))),
                     Text(
                       _distanceText(suggestion.distanceLabel),
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.mutedText),
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.mutedText),
                     ),
                   ],
                 ),
@@ -156,7 +156,7 @@ class _NearbyCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 3),
                   child: Text(
                     suggestion.reason,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -302,7 +302,7 @@ class _EmptyFeed extends StatelessWidget {
       decoration: BoxDecoration(color: ReconnectColors.surface, borderRadius: BorderRadius.circular(18)),
       child: Text(
         'No suggested meetups in $currentLocation right now. Try another nearby area.',
-        style: TextStyle(fontWeight: FontWeight.w600, color: ReconnectColors.mutedText),
+        style: const TextStyle(fontWeight: FontWeight.w600, color: ReconnectColors.mutedText),
       ),
     );
   }

@@ -5,6 +5,8 @@ analyzer:
     - build/**
     - .dart_tool/**
     - third_party/**
+    - backend/**
+    - coverage/**
 
 linter:
   rules:

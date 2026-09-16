@@ -56,7 +56,7 @@ class ReconnectNavBar extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: ReconnectColors.surface.withValues(alpha: 0.92),
-                border: Border(top: BorderSide(color: ReconnectColors.hairline)),
+                border: const Border(top: BorderSide(color: ReconnectColors.hairline)),
               ),
               child: Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 12 + bottomInset),

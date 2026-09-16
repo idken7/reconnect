@@ -256,14 +256,14 @@ class _SuggestionDeckSheetState extends State<SuggestionDeckSheet> with TickerPr
                         Text(_isActivity ? 'Activity ideas' : 'Conversation starters', style: Theme.of(context).textTheme.titleMedium),
                         Text(
                           'for ${widget.contact.name} · ${(_currentIndex % _cards.length) + 1} / ${_cards.length}',
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
                         ),
                       ],
                     ),
                   ),
                   GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
-                    child: Text('✕', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: ReconnectColors.mutedText)),
+                    child: const Text('✕', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: ReconnectColors.mutedText)),
                   ),
                 ],
               ),
@@ -280,7 +280,7 @@ class _SuggestionDeckSheetState extends State<SuggestionDeckSheet> with TickerPr
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     _isActivity ? '↑ plan · ↓ rate · ← → skip' : '↑ send · ↓ rate · ← → skip',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
                   ),
                 ),
                 SizedBox(

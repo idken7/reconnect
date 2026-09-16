@@ -51,7 +51,7 @@ class ContactDetailScreen extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       contact.isOnApp ? 'On Reconnect' : 'Not on Reconnect',
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.chipForeground),
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.chipForeground),
                     ),
                   ],
                 ),
@@ -63,7 +63,7 @@ class ContactDetailScreen extends StatelessWidget {
                 decoration: BoxDecoration(color: ReconnectColors.surface, borderRadius: BorderRadius.circular(16)),
                 child: Row(
                   children: [
-                    Text('Your preference', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText)),
+                    const Text('Your preference', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText)),
                     const Spacer(),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -100,7 +100,7 @@ class ContactDetailScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Available in', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ReconnectColors.mutedText)),
+                          const Text('Available in', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ReconnectColors.mutedText)),
                           const SizedBox(height: 2),
                           Text(
                             contact.availableIn.isEmpty ? 'Not shared' : contact.availableIn.join(', '),

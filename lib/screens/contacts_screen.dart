@@ -110,7 +110,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                         Text('Contacts', style: Theme.of(context).textTheme.headlineMedium),
                         Text(
                           '${widget.contacts.length} people',
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
+                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
                         ),
                       ],
                     ),
@@ -132,7 +132,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       ),
                       const SizedBox(height: 22),
                     ],
-                    Text(
+                    const Text(
                       "Drag someone into a lane to rank them. It's private — only you see this.",
                       style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText, height: 1.4),
                     ),
@@ -148,7 +148,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                   child: Center(
                     child: Text(
                       'No contacts match "$_searchQuery"',
-                      style: TextStyle(color: ReconnectColors.mutedText, fontWeight: FontWeight.w600),
+                      style: const TextStyle(color: ReconnectColors.mutedText, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -195,7 +195,7 @@ class _SearchField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       child: Row(
         children: [
-          Icon(Icons.search_rounded, size: 18, color: ReconnectColors.mutedTextStrong),
+          const Icon(Icons.search_rounded, size: 18, color: ReconnectColors.mutedTextStrong),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -204,7 +204,7 @@ class _SearchField extends StatelessWidget {
                 TextEditingValue(text: value, selection: TextSelection.collapsed(offset: value.length)),
               ),
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 isDense: true,
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
@@ -212,7 +212,7 @@ class _SearchField extends StatelessWidget {
                 filled: false,
                 hintText: 'Search contacts',
                 hintStyle: TextStyle(fontWeight: FontWeight.w600, color: ReconnectColors.mutedText),
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                contentPadding: EdgeInsets.symmetric(vertical: 12),
               ),
             ),
           ),
@@ -354,7 +354,7 @@ class _TierLane extends StatelessWidget {
                   const Spacer(),
                   Text(
                     contacts.length == 1 ? '1 person' : '${contacts.length} people',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.mutedText),
+                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.mutedText),
                   ),
                 ],
               ),
@@ -418,7 +418,7 @@ class _ContactChip extends StatelessWidget {
                 Text(contact.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                 Text(
                   contact.lastSeen,
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: ReconnectColors.mutedTextStrong),
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: ReconnectColors.mutedTextStrong),
                 ),
               ],
             ),
@@ -515,7 +515,7 @@ class _EmptyState extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'This first pass keeps contact matching local in the product flow and only surfaces people who have already joined.',
               textAlign: TextAlign.center,
               style: TextStyle(color: ReconnectColors.mutedText, fontWeight: FontWeight.w600),

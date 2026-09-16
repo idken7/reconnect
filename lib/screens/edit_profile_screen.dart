@@ -108,11 +108,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Center(
             child: Text(
               '${widget.profile.email} • ${widget.profile.phone}',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
             ),
           ),
           const SizedBox(height: 24),
-          Text('Profile picture URL', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: ReconnectColors.ink)),
+          const Text('Profile picture URL', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: ReconnectColors.ink)),
           const SizedBox(height: 8),
           TextField(
             key: const Key('profileImageField'),
@@ -126,10 +126,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Bio', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: ReconnectColors.ink)),
+              const Text('Bio', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: ReconnectColors.ink)),
               Text(
                 '${_bioController.text.length}/$_bioMaxLength',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ReconnectColors.mutedTextStrong),
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: ReconnectColors.mutedTextStrong),
               ),
             ],
           ),

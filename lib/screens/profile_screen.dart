@@ -59,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     profile.homeCity,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: ReconnectColors.mutedText),
                   ),
                 ],
               ),
@@ -74,7 +74,7 @@ class ProfileScreen extends StatelessWidget {
                     label: 'Contacts imported',
                     trailing: Text(
                       '$contactsCount',
-                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.mutedText),
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, color: ReconnectColors.mutedText),
                     ),
                     showChevron: false,
                     showDivider: true,
@@ -104,16 +104,16 @@ class ProfileScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(color: ReconnectColors.ink, borderRadius: BorderRadius.circular(16)),
-                  child: Row(
+                  child: const Row(
                     children: [
-                      const Icon(Icons.shuffle_rounded, color: Colors.white, size: 20),
-                      const SizedBox(width: 12),
+                      Icon(Icons.shuffle_rounded, color: Colors.white, size: 20),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Spin the wheel', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
-                            const Text(
+                            Text('Spin the wheel', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
+                            Text(
                               'Reach out to someone at random',
                               style: TextStyle(color: Color(0xFFCFC7BD), fontWeight: FontWeight.w600, fontSize: 12),
                             ),
@@ -156,7 +156,7 @@ class _ProfileListRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          border: showDivider ? Border(bottom: BorderSide(color: ReconnectColors.hairlineSoft)) : null,
+          border: showDivider ? const Border(bottom: BorderSide(color: ReconnectColors.hairlineSoft)) : null,
         ),
         child: Row(
           children: [
@@ -165,7 +165,7 @@ class _ProfileListRow extends StatelessWidget {
             Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
             if (trailing != null) trailing!,
             if (showChevron)
-              Icon(Icons.chevron_right_rounded, color: ReconnectColors.mutedTextStrong),
+              const Icon(Icons.chevron_right_rounded, color: ReconnectColors.mutedTextStrong),
           ],
         ),
       ),
