@@ -169,6 +169,55 @@ void main() {
     expect(matchesBody.containsKey('notOnApp'), true);
   });
 
+  test('updateProfile persists bio, homeCity, and profileImageUrl', () async {
+    final login = await postJson('/v1/auth/login', {
+      'email': 'avery@example.com',
+      'password': 'password123',
+    });
+    final accessToken = (login['body'] as Map<String, dynamic>)['accessToken'] as String;
+
+    final update = await patchJson(
+      '/v1/profile',
+      {
+        'bio': 'Chasing old friends across every city I visit.',
+        'homeCity': 'Austin',
+        'profileImageUrl': 'https://example.com/avery.jpg',
+      },
+      accessToken: accessToken,
+    );
+
+    expect(update['statusCode'], 200);
+    final updatedProfile = (update['body'] as Map<String, dynamic>)['profile'] as Map<String, dynamic>;
+    expect(updatedProfile['bio'], 'Chasing old friends across every city I visit.');
+    expect(updatedProfile['homeCity'], 'Austin');
+    expect(updatedProfile['profileImageUrl'], 'https://example.com/avery.jpg');
+
+    // Confirm the update round-trips through the dashboard, not just the
+    // immediate response.
+    final dashboard = await getJson('/v1/dashboard?location=Austin', accessToken: accessToken);
+    final dashboardProfile = (dashboard['body'] as Map<String, dynamic>)['profile'] as Map<String, dynamic>;
+    expect(dashboardProfile['bio'], 'Chasing old friends across every city I visit.');
+    expect(dashboardProfile['profileImageUrl'], 'https://example.com/avery.jpg');
+  });
+
+  test('updateProfile keeps the existing homeCity when none is provided', () async {
+    final login = await postJson('/v1/auth/login', {
+      'email': 'avery@example.com',
+      'password': 'password123',
+    });
+    final accessToken = (login['body'] as Map<String, dynamic>)['accessToken'] as String;
+
+    final update = await patchJson(
+      '/v1/profile',
+      {'bio': 'Still exploring Brooklyn.', 'homeCity': '', 'profileImageUrl': ''},
+      accessToken: accessToken,
+    );
+
+    expect(update['statusCode'], 200);
+    final updatedProfile = (update['body'] as Map<String, dynamic>)['profile'] as Map<String, dynamic>;
+    expect(updatedProfile['homeCity'], 'Brooklyn');
+  });
+
   test('expired access token can refresh and continue', () async {
     final login = await postJson('/v1/auth/login', {
       'email': 'avery@example.com',

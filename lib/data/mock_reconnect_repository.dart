@@ -18,7 +18,20 @@ class MockReconnectRepository {
         'Chicago',
       ];
 
-  List<ReconnectContact> get importedContacts => const [
+  /// A point in the past, used to seed [ReconnectContact.lastContacted] so
+  /// the spin wheel's "haven't talked in X days" slider has a real spread of
+  /// eligible contacts to filter instead of an all-null pool.
+  static DateTime? _daysAgo(int? days) => days == null ? null : DateTime.now().subtract(Duration(days: days));
+
+  /// A birthday landing [daysFromNow] days out (year is a placeholder — only
+  /// month/day matter to [BirthdayReminderService]).
+  static DateTime? _birthdayIn(int? daysFromNow) {
+    if (daysFromNow == null) return null;
+    final target = DateTime.now().add(Duration(days: daysFromNow));
+    return DateTime(1990, target.month, target.day);
+  }
+
+  List<ReconnectContact> get importedContacts => [
         ReconnectContact(
           id: '1',
           name: 'Jordan Patel',
@@ -26,9 +39,10 @@ class MockReconnectRepository {
           phone: '+1 (212) 555-0180',
           isOnApp: true,
           lastSeen: '2 weeks ago',
-          availableIn: ['Brooklyn', 'Manhattan'],
+          availableIn: const ['Brooklyn', 'Manhattan'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(12),
+          birthday: _birthdayIn(5),
         ),
         ReconnectContact(
           id: '2',
@@ -37,9 +51,10 @@ class MockReconnectRepository {
           phone: '+1 (646) 555-0148',
           isOnApp: true,
           lastSeen: '3 years ago',
-          availableIn: ['Brooklyn', 'Chicago'],
+          availableIn: const ['Brooklyn', 'Chicago'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(null),
+          birthday: _birthdayIn(18),
         ),
         ReconnectContact(
           id: '3',
@@ -48,9 +63,9 @@ class MockReconnectRepository {
           phone: '+1 (512) 555-0199',
           isOnApp: true,
           lastSeen: '8 months ago',
-          availableIn: ['Austin'],
+          availableIn: const ['Austin'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(210),
         ),
         ReconnectContact(
           id: '4',
@@ -59,9 +74,9 @@ class MockReconnectRepository {
           phone: '+1 (312) 555-0116',
           isOnApp: false,
           lastSeen: 'Unknown',
-          availableIn: ['Chicago'],
+          availableIn: const ['Chicago'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(40),
         ),
         ReconnectContact(
           id: '5',
@@ -70,9 +85,9 @@ class MockReconnectRepository {
           phone: '+1 (347) 555-0172',
           isOnApp: true,
           lastSeen: '1 month ago',
-          availableIn: ['Manhattan'],
+          availableIn: const ['Manhattan'],
           preference: ReconnectPreference.ratherAvoid,
-          lastContacted: null,
+          lastContacted: _daysAgo(400),
         ),
         // Additional test contacts for connection testing
         ReconnectContact(
@@ -82,9 +97,9 @@ class MockReconnectRepository {
           phone: '+1 (415) 555-0140',
           isOnApp: true,
           lastSeen: '2 months ago',
-          availableIn: ['Brooklyn', 'Manhattan', 'Austin'],
+          availableIn: const ['Brooklyn', 'Manhattan', 'Austin'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(8),
         ),
         ReconnectContact(
           id: '7',
@@ -93,9 +108,10 @@ class MockReconnectRepository {
           phone: '+1 (206) 555-0134',
           isOnApp: true,
           lastSeen: '6 months ago',
-          availableIn: ['Austin'],
+          availableIn: const ['Austin'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(95),
+          birthday: _birthdayIn(27),
         ),
         ReconnectContact(
           id: '8',
@@ -104,9 +120,9 @@ class MockReconnectRepository {
           phone: '+1 (510) 555-0123',
           isOnApp: true,
           lastSeen: '4 months ago',
-          availableIn: ['Manhattan', 'Chicago'],
+          availableIn: const ['Manhattan', 'Chicago'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(30),
         ),
         ReconnectContact(
           id: '9',
@@ -115,9 +131,9 @@ class MockReconnectRepository {
           phone: '+1 (612) 555-0167',
           isOnApp: true,
           lastSeen: '5 years ago',
-          availableIn: ['Brooklyn'],
+          availableIn: const ['Brooklyn'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(150),
         ),
         ReconnectContact(
           id: '10',
@@ -126,9 +142,9 @@ class MockReconnectRepository {
           phone: '+1 (214) 555-0156',
           isOnApp: true,
           lastSeen: '3 weeks ago',
-          availableIn: ['Austin', 'Chicago'],
+          availableIn: const ['Austin', 'Chicago'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(21),
         ),
         ReconnectContact(
           id: '11',
@@ -137,9 +153,10 @@ class MockReconnectRepository {
           phone: '+1 (303) 555-0141',
           isOnApp: true,
           lastSeen: '1 year ago',
-          availableIn: ['Brooklyn', 'Austin'],
+          availableIn: const ['Brooklyn', 'Austin'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(365),
+          birthday: _birthdayIn(2),
         ),
         ReconnectContact(
           id: '12',
@@ -148,9 +165,9 @@ class MockReconnectRepository {
           phone: '+1 (415) 555-0150',
           isOnApp: true,
           lastSeen: '7 months ago',
-          availableIn: ['Manhattan'],
+          availableIn: const ['Manhattan'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(210),
         ),
         ReconnectContact(
           id: '13',
@@ -159,9 +176,9 @@ class MockReconnectRepository {
           phone: '+1 (202) 555-0143',
           isOnApp: false,
           lastSeen: 'Unknown',
-          availableIn: ['Chicago'],
+          availableIn: const ['Chicago'],
           preference: ReconnectPreference.ratherAvoid,
-          lastContacted: null,
+          lastContacted: _daysAgo(null),
         ),
         ReconnectContact(
           id: '14',
@@ -170,9 +187,9 @@ class MockReconnectRepository {
           phone: '+1 (713) 555-0157',
           isOnApp: true,
           lastSeen: '3 months ago',
-          availableIn: ['Austin', 'Manhattan'],
+          availableIn: const ['Austin', 'Manhattan'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(90),
         ),
         ReconnectContact(
           id: '15',
@@ -181,9 +198,9 @@ class MockReconnectRepository {
           phone: '+1 (408) 555-0164',
           isOnApp: true,
           lastSeen: '9 months ago',
-          availableIn: ['Brooklyn'],
+          availableIn: const ['Brooklyn'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(270),
         ),
         ReconnectContact(
           id: '16',
@@ -192,9 +209,9 @@ class MockReconnectRepository {
           phone: '+1 (503) 555-0145',
           isOnApp: true,
           lastSeen: '2 years ago',
-          availableIn: ['Chicago', 'Austin'],
+          availableIn: const ['Chicago', 'Austin'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(730),
         ),
         ReconnectContact(
           id: '17',
@@ -203,9 +220,9 @@ class MockReconnectRepository {
           phone: '+1 (541) 555-0168',
           isOnApp: true,
           lastSeen: '4 months ago',
-          availableIn: ['Brooklyn', 'Manhattan'],
+          availableIn: const ['Brooklyn', 'Manhattan'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(120),
         ),
         ReconnectContact(
           id: '18',
@@ -214,9 +231,9 @@ class MockReconnectRepository {
           phone: '+1 (702) 555-0151',
           isOnApp: true,
           lastSeen: '6 years ago',
-          availableIn: ['Austin'],
+          availableIn: const ['Austin'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(2190),
         ),
         ReconnectContact(
           id: '19',
@@ -225,9 +242,9 @@ class MockReconnectRepository {
           phone: '+1 (559) 555-0144',
           isOnApp: true,
           lastSeen: '5 months ago',
-          availableIn: ['Manhattan', 'Chicago'],
+          availableIn: const ['Manhattan', 'Chicago'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(150),
         ),
         ReconnectContact(
           id: '20',
@@ -236,9 +253,9 @@ class MockReconnectRepository {
           phone: '+1 (949) 555-0162',
           isOnApp: true,
           lastSeen: '11 months ago',
-          availableIn: ['Brooklyn'],
+          availableIn: const ['Brooklyn'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(330),
         ),
         ReconnectContact(
           id: '21',
@@ -247,9 +264,9 @@ class MockReconnectRepository {
           phone: '+1 (858) 555-0149',
           isOnApp: true,
           lastSeen: '7 months ago',
-          availableIn: ['Austin', 'Manhattan'],
+          availableIn: const ['Austin', 'Manhattan'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(210),
         ),
         ReconnectContact(
           id: '22',
@@ -258,9 +275,9 @@ class MockReconnectRepository {
           phone: '+1 (432) 555-0165',
           isOnApp: true,
           lastSeen: '3 years ago',
-          availableIn: ['Chicago'],
+          availableIn: const ['Chicago'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(1095),
         ),
         ReconnectContact(
           id: '23',
@@ -269,9 +286,9 @@ class MockReconnectRepository {
           phone: '+1 (480) 555-0152',
           isOnApp: true,
           lastSeen: '2 years ago',
-          availableIn: ['Brooklyn', 'Austin'],
+          availableIn: const ['Brooklyn', 'Austin'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(730),
         ),
         ReconnectContact(
           id: '24',
@@ -280,9 +297,9 @@ class MockReconnectRepository {
           phone: '+1 (623) 555-0166',
           isOnApp: false,
           lastSeen: 'Unknown',
-          availableIn: ['Manhattan'],
+          availableIn: const ['Manhattan'],
           preference: ReconnectPreference.ratherAvoid,
-          lastContacted: null,
+          lastContacted: _daysAgo(null),
         ),
         ReconnectContact(
           id: '25',
@@ -291,9 +308,9 @@ class MockReconnectRepository {
           phone: '+1 (916) 555-0147',
           isOnApp: true,
           lastSeen: '8 months ago',
-          availableIn: ['Brooklyn', 'Chicago'],
+          availableIn: const ['Brooklyn', 'Chicago'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(240),
         ),
         ReconnectContact(
           id: '26',
@@ -302,9 +319,9 @@ class MockReconnectRepository {
           phone: '+1 (702) 555-0159',
           isOnApp: true,
           lastSeen: '1 year ago',
-          availableIn: ['Austin'],
+          availableIn: const ['Austin'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(365),
         ),
         ReconnectContact(
           id: '27',
@@ -313,9 +330,9 @@ class MockReconnectRepository {
           phone: '+1 (520) 555-0161',
           isOnApp: true,
           lastSeen: '4 years ago',
-          availableIn: ['Manhattan', 'Austin'],
+          availableIn: const ['Manhattan', 'Austin'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(1460),
         ),
         ReconnectContact(
           id: '28',
@@ -324,9 +341,9 @@ class MockReconnectRepository {
           phone: '+1 (225) 555-0146',
           isOnApp: true,
           lastSeen: '6 months ago',
-          availableIn: ['Brooklyn'],
+          availableIn: const ['Brooklyn'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(180),
         ),
         ReconnectContact(
           id: '29',
@@ -335,9 +352,10 @@ class MockReconnectRepository {
           phone: '+1 (601) 555-0163',
           isOnApp: true,
           lastSeen: '2 years ago',
-          availableIn: ['Chicago', 'Manhattan'],
+          availableIn: const ['Chicago', 'Manhattan'],
           preference: ReconnectPreference.loveToSee,
-          lastContacted: null,
+          lastContacted: _daysAgo(730),
+          birthday: _birthdayIn(0),
         ),
         ReconnectContact(
           id: '30',
@@ -346,9 +364,9 @@ class MockReconnectRepository {
           phone: '+1 (754) 555-0160',
           isOnApp: true,
           lastSeen: '5 months ago',
-          availableIn: ['Austin'],
+          availableIn: const ['Austin'],
           preference: ReconnectPreference.neutral,
-          lastContacted: null,
+          lastContacted: _daysAgo(150),
         ),
       ];
 
@@ -375,7 +393,7 @@ class MockReconnectRepository {
       return NearbySuggestion(
         contact: contact,
         reason: reason,
-        distanceLabel: location == 'Brooklyn' ? '<3 miles' : 'Nearby',
+        distanceLabel: location == 'Brooklyn' ? '<3 miles away' : 'Nearby',
         sharedLocations: sharedLocations,
         timeSinceLastSeen: contact.lastSeen,
       );
@@ -398,17 +416,26 @@ class MockReconnectRepository {
     required List<String> sharedLocations,
   }) {
     if (contact.preference == ReconnectPreference.loveToSee) {
-      if (contact.lastSeen.contains('ago')) {
-        return 'Last saw ${contact.name} ${ contact.lastSeen}. Now both in $location.';
-      } else if (contact.lastSeen == 'Unknown') {
-        return 'You flagged as a top reconnect. Both active in $location.';
+      if (contact.lastSeen == 'Unknown') {
+        return '${contact.name} has been out of reach. Great time to reconnect in $location!';
+      } else if (contact.lastSeen.contains('years ago')) {
+        return 'It\'s been ${contact.lastSeen} since you caught up with ${contact.name}. They are nearby in $location today.';
+      } else if (contact.lastSeen.contains('ago')) {
+        return 'Last saw ${contact.name} ${contact.lastSeen}. Their $location plans overlap with yours.';
+      } else {
+        return '${contact.name} is one you want to see. Now in $location with you!';
       }
-      return 'Top reconnect who is active in $location with you now.';
     } else {
-      if (sharedLocations.isNotEmpty) {
-        return 'Also available in ${sharedLocations.join(', ')}. Now overlapping in $location.';
+      // Neutral preference - focus on shared locations and overlap
+      if (sharedLocations.length > 1) {
+        return '${contact.name} splits time between ${sharedLocations.join(', ')} and $location—familiar faces!';
+      } else if (sharedLocations.isNotEmpty) {
+        return '${contact.name} also hangs out in ${sharedLocations.first}. Now overlapping in $location!';
+      } else if (contact.lastSeen.contains('ago')) {
+        return 'Saw ${contact.name} ${contact.lastSeen}. A low-key $location catch-up could fit.';
+      } else {
+        return '${contact.name} is in your $location area. Worth a quick catch-up?';
       }
-      return 'You and this contact overlap in $location right now.';
     }
   }
 

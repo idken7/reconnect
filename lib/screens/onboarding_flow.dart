@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../app_state.dart';
+import '../theme/reconnect_theme.dart';
+import '../widgets/adaptive_buttons.dart';
+import '../widgets/adaptive_scaffold.dart';
 
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({
@@ -39,19 +42,22 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   Widget build(BuildContext context) {
     final appState = widget.appState;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Welcome to Reconnect'),
-      ),
+    return AdaptiveScaffold(
+      title: 'Welcome to Reconnect',
+      showBackButton: false,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (step > 0) ...[
+            _OnboardingDots(activeStep: step, totalSteps: 3),
+            const SizedBox(height: 16),
+          ],
           if (step == 0) ...[
             Text('Reconnect with people you have not seen in a while.', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 12),
             const Text('This onboarding sets up your profile, imports contacts, and enables nearby suggestions.'),
             const SizedBox(height: 20),
-            FilledButton(
+            AdaptiveFilledButton(
               onPressed: () => setState(() => step = 1),
               child: const Text('Start onboarding'),
             ),
@@ -65,7 +71,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             TextField(controller: _homeCityController, decoration: const InputDecoration(labelText: 'Home city')),
             TextField(controller: _bioController, decoration: const InputDecoration(labelText: 'Bio')),
             const SizedBox(height: 16),
-            FilledButton(
+            AdaptiveFilledButton(
               onPressed: () async {
                 try {
                   await appState.signUp(
@@ -88,7 +94,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
               child: const Text('Create account'),
             ),
             const SizedBox(height: 8),
-            OutlinedButton(
+            AdaptiveOutlinedButton(
               onPressed: () async {
                 try {
                   await appState.login(
@@ -111,7 +117,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             const SizedBox(height: 12),
             const Text('We need contacts and location so we can discover friends and suggest nearby catchups.'),
             const SizedBox(height: 16),
-            FilledButton(
+            AdaptiveFilledButton(
               onPressed: () async {
                 await appState.refreshLiveLocation();
                 if (mounted) {
@@ -125,7 +131,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             const SizedBox(height: 12),
             const Text('Find who is already on Reconnect and view match results.'),
             const SizedBox(height: 16),
-            FilledButton(
+            AdaptiveFilledButton(
               onPressed: appState.isImporting
                   ? null
                   : () async {
@@ -146,6 +152,37 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// Step-progress dots for onboarding steps 1-3: the active dot grows and
+/// darkens, passed dots stay dark, and upcoming ones stay light.
+class _OnboardingDots extends StatelessWidget {
+  const _OnboardingDots({required this.activeStep, required this.totalSteps});
+
+  final int activeStep;
+  final int totalSteps;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (var i = 1; i <= totalSteps; i++) ...[
+          if (i > 1) const SizedBox(width: 6),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            width: i == activeStep ? 22 : 8,
+            height: 6,
+            decoration: BoxDecoration(
+              color: i <= activeStep ? ReconnectColors.ink : ReconnectColors.hairline,
+              borderRadius: BorderRadius.circular(3),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

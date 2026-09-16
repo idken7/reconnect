@@ -241,6 +241,26 @@ class ReconnectApiClient {
     return _dashboardFromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
+  Future<ReconnectDashboardData> updateProfile({
+    required String bio,
+    required String homeCity,
+    required String profileImageUrl,
+  }) async {
+    final response = await _withAuthRetry(
+      () => _client.patch(
+        _endpoint('/v1/profile'),
+        headers: _jsonHeaders,
+        body: jsonEncode({
+          'bio': bio,
+          'homeCity': homeCity,
+          'profileImageUrl': profileImageUrl,
+        }),
+      ),
+    );
+    _ensureSuccess(response);
+    return _dashboardFromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  }
+
   Future<ContactMatches> fetchContactMatches() async {
     final response = await _withAuthRetry(
       () => _client.get(

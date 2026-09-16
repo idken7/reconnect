@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'theme/reconnect_theme.dart';
+
 export 'models/activity_suggestion.dart';
 export 'models/conversation_starter.dart';
 export 'models/spin_history.dart';
@@ -68,18 +70,22 @@ extension ReconnectPreferenceLabel on ReconnectPreference {
     }
   }
 
-  Color get color {
+  Color get color => tierStyle.color;
+
+  /// The tier's full color/background/border trio, used by the Contacts
+  /// drag-and-drop lanes and the spin wheel.
+  TierStyle get tierStyle {
     switch (this) {
       case ReconnectPreference.loveToSee:
-        return const Color(0xFF4CAF50);
+        return tierStyleLove;
       case ReconnectPreference.like:
-        return const Color(0xFF8BC34A);
+        return tierStyleLike;
       case ReconnectPreference.neutral:
-        return const Color(0xFF607D8B);
+        return tierStyleNeutral;
       case ReconnectPreference.dislike:
-        return const Color(0xFFFF9800);
+        return tierStyleDislike;
       case ReconnectPreference.ratherAvoid:
-        return const Color(0xFFE57373);
+        return tierStyleAvoid;
     }
   }
 }
@@ -91,6 +97,7 @@ class ReconnectProfile {
     required this.phone,
     required this.homeCity,
     required this.bio,
+    this.profileImageUrl = '',
     this.birthday,
   });
 
@@ -101,6 +108,7 @@ class ReconnectProfile {
       phone: json['phone'] as String? ?? '',
       homeCity: json['homeCity'] as String? ?? '',
       bio: json['bio'] as String? ?? '',
+      profileImageUrl: json['profileImageUrl'] as String? ?? '',
       birthday: json['birthday'] != null ? DateTime.tryParse(json['birthday'] as String) : null,
     );
   }
@@ -110,6 +118,7 @@ class ReconnectProfile {
   final String phone;
   final String homeCity;
   final String bio;
+  final String profileImageUrl;
   final DateTime? birthday;
 
   Map<String, dynamic> toJson() {
@@ -119,6 +128,7 @@ class ReconnectProfile {
       'phone': phone,
       'homeCity': homeCity,
       'bio': bio,
+      'profileImageUrl': profileImageUrl,
       'birthday': birthday?.toIso8601String(),
     };
   }
@@ -129,6 +139,7 @@ class ReconnectProfile {
     String? phone,
     String? homeCity,
     String? bio,
+    String? profileImageUrl,
     DateTime? birthday,
   }) {
     return ReconnectProfile(
@@ -137,6 +148,7 @@ class ReconnectProfile {
       phone: phone ?? this.phone,
       homeCity: homeCity ?? this.homeCity,
       bio: bio ?? this.bio,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       birthday: birthday ?? this.birthday,
     );
   }

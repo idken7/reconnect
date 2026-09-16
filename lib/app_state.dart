@@ -374,6 +374,34 @@ class ReconnectAppState extends ChangeNotifier {
     }
   }
 
+  Future<void> updateProfile({
+    required String bio,
+    required String homeCity,
+    String? profileImageUrl,
+  }) async {
+    _errorMessage = null;
+    final resolvedImageUrl = profileImageUrl ?? _dashboard.profile.profileImageUrl;
+    final updatedProfile = _dashboard.profile.copyWith(
+      bio: bio,
+      homeCity: homeCity,
+      profileImageUrl: resolvedImageUrl,
+    );
+    _dashboard = _dashboard.copyWith(profile: updatedProfile);
+    notifyListeners();
+
+    try {
+      _dashboard = await apiClient.updateProfile(
+        bio: bio,
+        homeCity: homeCity,
+        profileImageUrl: resolvedImageUrl,
+      );
+      await _persistFromApiClient();
+    } catch (_) {
+      _errorMessage = 'Profile updated locally because the backend is unavailable.';
+      notifyListeners();
+    }
+  }
+
   Future<void> _persistFromApiClient() async {
     final session = apiClient.currentSession;
     if (session == null) {
@@ -407,25 +435,36 @@ class ReconnectAppState extends ChangeNotifier {
     await prefs.remove(_onboardingKey);
   }
 
-  /// Generate mock matches from contacts for test environment
-  /// Separates contacts into mutual (on-app) and notOnApp categories
+  /// Generate mock matches from contacts for test environment.
+  /// On-app contacts split into mutual (you'd love/like to see them — a
+  /// two-way interest) and oneWay/"discovered" (on-app but not a priority
+  /// tier for you, i.e. they have you in their contacts without a
+  /// reciprocal match yet); off-app contacts become invite candidates.
   ContactMatches _generateMatchesFromContacts(List<ReconnectContact> contacts) {
     final mutual = <MatchCandidate>[];
+    final oneWay = <MatchCandidate>[];
     final notOnApp = <MatchCandidate>[];
 
     for (final contact in contacts) {
-      if (contact.isOnApp) {
-        mutual.add(
-          MatchCandidate(
-            name: contact.name,
-            contact: contact,
-          ),
-        );
-      } else {
+      if (!contact.isOnApp) {
         notOnApp.add(
           MatchCandidate(
             name: contact.name,
             status: 'Not on app',
+            contact: contact,
+          ),
+        );
+        continue;
+      }
+
+      final isMutual = contact.preference == ReconnectPreference.loveToSee || contact.preference == ReconnectPreference.like;
+      if (isMutual) {
+        mutual.add(MatchCandidate(name: contact.name, contact: contact));
+      } else {
+        oneWay.add(
+          MatchCandidate(
+            name: contact.name,
+            status: 'Has you in their contacts',
             contact: contact,
           ),
         );
@@ -434,7 +473,7 @@ class ReconnectAppState extends ChangeNotifier {
 
     return ContactMatches(
       mutual: mutual,
-      oneWay: const <MatchCandidate>[],
+      oneWay: oneWay,
       notOnApp: notOnApp,
     );
   }

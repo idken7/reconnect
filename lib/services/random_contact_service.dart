@@ -3,21 +3,48 @@ import 'package:reconnect/models.dart';
 class RandomContactService {
   RandomContactService();
 
+  /// Contacts who haven't been contacted in the specified days, optionally
+  /// filtered by preference. This is the exact pool [getRandomContact] picks
+  /// from, exposed so the UI can show what's actually eligible.
+  List<ReconnectContact> getEligibleContacts(
+    List<ReconnectContact> contacts, {
+    int daysThreshold = 90,
+    ReconnectPreference? preferenceFilter,
+  }) {
+    final now = DateTime.now();
+    final thresholdDate = now.subtract(Duration(days: daysThreshold));
+
+    return contacts.where((contact) {
+      // Check time threshold
+      final meetsTimeThreshold = contact.lastContacted == null ||
+          contact.lastContacted!.isBefore(thresholdDate);
+
+      if (!meetsTimeThreshold) return false;
+
+      // Check preference filter if specified
+      if (preferenceFilter != null && contact.preference != preferenceFilter) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
   /// Select a random contact who hasn't been contacted in the specified days
+  /// Optionally filters by preference
   /// Returns null if no contacts match the criteria
   ReconnectContact? getRandomContact(
     List<ReconnectContact> contacts, {
     int daysThreshold = 90,
+    ReconnectPreference? preferenceFilter,
   }) {
     if (contacts.isEmpty) return null;
 
-    final now = DateTime.now();
-    final thresholdDate = now.subtract(Duration(days: daysThreshold));
-
-    final eligible = contacts.where((contact) {
-      if (contact.lastContacted == null) return true;
-      return contact.lastContacted!.isBefore(thresholdDate);
-    }).toList();
+    final eligible = getEligibleContacts(
+      contacts,
+      daysThreshold: daysThreshold,
+      preferenceFilter: preferenceFilter,
+    );
 
     if (eligible.isEmpty) return null;
 

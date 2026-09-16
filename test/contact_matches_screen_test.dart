@@ -21,16 +21,16 @@ void main() {
     });
 
     testWidgets('renders with matches and displays tabs', (WidgetTester tester) async {
-      final matches = ContactMatches(
-        mutual: const [],
-        oneWay: const [],
+      const matches = ContactMatches(
+        mutual: [],
+        oneWay: [],
         notOnApp: [
-          const MatchCandidate(name: 'Alice Johnson', status: 'Not on app'),
+          MatchCandidate(name: 'Alice Johnson', status: 'Not on app'),
         ],
       );
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: DefaultTabController(
             length: 3,
             child: Scaffold(
@@ -40,19 +40,19 @@ void main() {
         ),
       );
 
-      // Should show the matches count
-      expect(find.text('Matches found: 1'), findsOneWidget);
+      // Should show the header
+      expect(find.text('Matches'), findsOneWidget);
 
       // Should show all tabs
       expect(find.text('Mutual'), findsOneWidget);
       expect(find.text('Discovered'), findsOneWidget);
-      expect(find.text('Not on app'), findsOneWidget);
+      expect(find.text('Invite'), findsOneWidget);
     });
 
     testWidgets('displays mutual matches correctly', (WidgetTester tester) async {
-      final matches = ContactMatches(
+      const matches = ContactMatches(
         mutual: [
-          const MatchCandidate(
+          MatchCandidate(
             name: 'Charlie Brown',
             contact: ReconnectContact(
               id: '1',
@@ -66,12 +66,12 @@ void main() {
             ),
           ),
         ],
-        oneWay: const [],
-        notOnApp: const [],
+        oneWay: [],
+        notOnApp: [],
       );
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: DefaultTabController(
             length: 3,
             child: Scaffold(
@@ -81,22 +81,23 @@ void main() {
         ),
       );
 
-      // Verify the mutual match is shown
+      // Verify the mutual match is shown, badged "Mutual" (which also
+      // labels the currently-selected tab pill, hence findsWidgets).
       expect(find.text('Charlie Brown'), findsOneWidget);
-      expect(find.text('Mutual match'), findsOneWidget);
+      expect(find.text('Mutual'), findsWidgets);
     });
 
     testWidgets('renders screen without errors', (WidgetTester tester) async {
-      final matches = ContactMatches(
-        mutual: const [],
-        oneWay: const [],
+      const matches = ContactMatches(
+        mutual: [],
+        oneWay: [],
         notOnApp: [
-          const MatchCandidate(name: 'Test User', status: 'Not on app'),
+          MatchCandidate(name: 'Test User', status: 'Not on app'),
         ],
       );
 
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: DefaultTabController(
             length: 3,
             child: Scaffold(
@@ -107,7 +108,7 @@ void main() {
       );
 
       // Verify the screen renders without throwing
-      expect(find.text('Not on app'), findsOneWidget);
+      expect(find.text('Invite'), findsOneWidget);
     });
   });
 }

@@ -91,6 +91,7 @@ class PersistentStore {
           'name': 'Avery Stone',
           'homeCity': 'Brooklyn',
           'bio': 'Trying to reconnect with the people who made earlier chapters worth remembering.',
+          'profileImageUrl': '',
           'createdAt': DateTime.now().toUtc().toIso8601String(),
         },
       ],
@@ -122,7 +123,7 @@ class BackendState {
   final PersistentStore store;
   final Duration accessTokenTtl;
   final Duration refreshTokenTtl;
-  Map<String, dynamic> _state;
+  final Map<String, dynamic> _state;
 
   static const List<String> supportedLocations = <String>[
     'Brooklyn',
@@ -220,6 +221,7 @@ class BackendState {
       'name': (payload['name'] as String? ?? '').trim().isEmpty ? 'New User' : (payload['name'] as String).trim(),
       'homeCity': (payload['homeCity'] as String? ?? 'Brooklyn').trim(),
       'bio': (payload['bio'] as String? ?? '').trim(),
+      'profileImageUrl': (payload['profileImageUrl'] as String? ?? '').trim(),
       'createdAt': DateTime.now().toUtc().toIso8601String(),
     };
 
@@ -486,6 +488,23 @@ class BackendState {
     return dashboard(userId);
   }
 
+  Map<String, dynamic> updateProfile(
+    String userId, {
+    required String bio,
+    required String homeCity,
+    required String profileImageUrl,
+  }) {
+    final user = _findUser(userId);
+    user['bio'] = bio.trim();
+    if (homeCity.trim().isNotEmpty) {
+      user['homeCity'] = homeCity.trim();
+    }
+    user['profileImageUrl'] = profileImageUrl.trim();
+
+    _persist();
+    return dashboard(userId);
+  }
+
   Map<String, dynamic> matches(String userId) {
     final state = _ensureUserState(userId);
     return Map<String, dynamic>.from(state['matches'] as Map<String, dynamic>? ?? const <String, dynamic>{
@@ -545,6 +564,7 @@ class BackendState {
       'phone': user['phone'] as String? ?? '',
       'homeCity': user['homeCity'] as String? ?? 'Brooklyn',
       'bio': user['bio'] as String? ?? '',
+      'profileImageUrl': user['profileImageUrl'] as String? ?? '',
     };
   }
 
@@ -597,7 +617,7 @@ class BackendState {
       suggestions.add({
         'contact': contact,
         'reason': reason,
-        'distanceLabel': location == 'Brooklyn' ? '<3 miles' : 'Nearby',
+        'distanceLabel': location == 'Brooklyn' ? '<3 miles away' : 'Nearby',
         'sharedLocations': sharedLocations,
         'timeSinceLastSeen': lastSeen,
       });
@@ -623,17 +643,26 @@ class BackendState {
     required List<String> sharedLocations,
   }) {
     if (preference == 'loveToSee') {
-      if (lastSeen.contains('ago')) {
-        return 'Last saw $contactName $lastSeen. Now both in $location.';
-      } else if (lastSeen == 'Unknown') {
-        return 'You flagged as a top reconnect. Both active in $location.';
+      if (lastSeen == 'Unknown') {
+        return '$contactName has been out of reach. Great time to reconnect in $location!';
+      } else if (lastSeen.contains('years ago')) {
+        return 'It\'s been $lastSeen since you caught up with $contactName. They are nearby in $location today.';
+      } else if (lastSeen.contains('ago')) {
+        return 'Last saw $contactName $lastSeen. Their $location plans overlap with yours.';
+      } else {
+        return '$contactName is one you want to see. Now in $location with you!';
       }
-      return 'Top reconnect who is active in $location with you now.';
     } else {
-      if (sharedLocations.isNotEmpty) {
-        return 'Also available in ${sharedLocations.join(', ')}. Now overlapping in $location.';
+      // Neutral preference - focus on shared locations and overlap
+      if (sharedLocations.length > 1) {
+        return '$contactName splits time between ${sharedLocations.join(', ')} and $location—familiar faces!';
+      } else if (sharedLocations.isNotEmpty) {
+        return '$contactName also hangs out in ${sharedLocations.first}. Now overlapping in $location!';
+      } else if (lastSeen.contains('ago')) {
+        return 'Saw $contactName $lastSeen. A low-key $location catch-up could fit.';
+      } else {
+        return '$contactName is in your $location area. Worth a quick catch-up?';
       }
-      return 'You and this contact overlap in $location right now.';
     }
   }
 
@@ -766,6 +795,19 @@ Future<void> _handleRequest(HttpRequest request, BackendState state) async {
           location: payload['location'] as String?,
           latitude: (payload['latitude'] as num?)?.toDouble(),
           longitude: (payload['longitude'] as num?)?.toDouble(),
+        ),
+      );
+    } else if (request.method == 'PATCH' && uri.path == '/v1/profile') {
+      final userId = state.authenticate(request.headers.value(HttpHeaders.authorizationHeader));
+      final payload = await _bodyAsJson(request);
+      _writeJson(
+        request.response,
+        200,
+        state.updateProfile(
+          userId,
+          bio: payload['bio'] as String? ?? '',
+          homeCity: payload['homeCity'] as String? ?? '',
+          profileImageUrl: payload['profileImageUrl'] as String? ?? '',
         ),
       );
     } else {

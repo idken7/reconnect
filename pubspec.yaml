@@ -15,10 +15,13 @@ dependencies:
   permission_handler: ^11.3.1
   shared_preferences: ^2.3.2
   share_plus: ^13.1.0
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^5.0.0
   mockito: ^5.4.4
   build_runner: ^2.4.6
   integration_test:

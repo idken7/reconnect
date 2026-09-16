@@ -6,24 +6,12 @@ class BirthdayReminderService {
     List<ReconnectContact> contacts, {
     int daysAhead = 30,
   }) {
-    final now = DateTime.now();
     final upcoming = <ReconnectContact>[];
 
     for (final contact in contacts) {
       if (contact.birthday == null) continue;
 
-      final birthday = contact.birthday!;
-      final thisBirthday = DateTime(now.year, birthday.month, birthday.day);
-
-      // If birthday already passed this year, check next year
-      DateTime nextBirthday;
-      if (thisBirthday.isBefore(now)) {
-        nextBirthday = DateTime(now.year + 1, birthday.month, birthday.day);
-      } else {
-        nextBirthday = thisBirthday;
-      }
-
-      final daysUntil = nextBirthday.difference(now).inDays;
+      final daysUntil = _getDaysUntilBirthday(contact.birthday!);
       if (daysUntil >= 0 && daysUntil <= daysAhead) {
         upcoming.add(contact);
       }
@@ -107,13 +95,22 @@ class BirthdayReminderService {
   }
 
   int _getDaysUntilBirthday(DateTime birthday) {
-    final now = DateTime.now();
-    var thisBirthday = DateTime(now.year, birthday.month, birthday.day);
+    // Diffed at midnight on both sides, so a birthday that's calendar-tomorrow
+    // always comes out to 1 day away, not 0 — diffing against DateTime.now()
+    // (which carries today's time-of-day) truncates it to 0 for all but the
+    // last instant before midnight.
+    final today = _today();
+    var thisBirthday = DateTime(today.year, birthday.month, birthday.day);
 
-    if (thisBirthday.isBefore(now)) {
-      thisBirthday = DateTime(now.year + 1, birthday.month, birthday.day);
+    if (thisBirthday.isBefore(today)) {
+      thisBirthday = DateTime(today.year + 1, birthday.month, birthday.day);
     }
 
-    return thisBirthday.difference(now).inDays;
+    return thisBirthday.difference(today).inDays;
+  }
+
+  DateTime _today() {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
   }
 }
