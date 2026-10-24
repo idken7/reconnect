@@ -123,6 +123,22 @@ class ReconnectAppState extends ChangeNotifier {
     return birthdayReminderService.getUpcomingBirthdays(contacts);
   }
 
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  /// In-flight network calls can finish after the state is disposed.
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
   // ---------------------------------------------------------------- startup
 
   Future<void> initialize() async {
