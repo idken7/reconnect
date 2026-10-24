@@ -4,11 +4,23 @@
 # This script builds and uploads the app to TestFlight using Xcode's notarization
 # Usage: ./scripts/upload_to_testflight.sh <VERSION> <BUILD_NUMBER>
 # Example: ./scripts/upload_to_testflight.sh 0.1.0 1
+#
+# Environment: FLAVOR (prod default, or staging) and optional RECONNECT_API_BASE_URL,
+# exactly as in build_testflight.sh.
 
 set -e
 
 VERSION=${1:-0.1.0}
 BUILD_NUMBER=${2:-1}
+FLAVOR=${FLAVOR:-prod}
+if [[ "$FLAVOR" != "prod" && "$FLAVOR" != "staging" ]]; then
+  echo "FLAVOR must be prod or staging for a release build (got '$FLAVOR')" >&2
+  exit 1
+fi
+DART_DEFINES=(--dart-define=FLAVOR="$FLAVOR")
+if [[ -n "${RECONNECT_API_BASE_URL:-}" ]]; then
+  DART_DEFINES+=(--dart-define=RECONNECT_API_BASE_URL="$RECONNECT_API_BASE_URL")
+fi
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="$PROJECT_DIR/build/ios/iphoneos"
 ARCHIVE_PATH="$PROJECT_DIR/build/ios/archive.xcarchive"
@@ -21,10 +33,12 @@ echo ""
 # Step 1: Build iOS app
 echo "🔨 Step 1: Building iOS app..."
 cd "$PROJECT_DIR"
-flutter build ios release \
+flutter build ios \
+  --release \
   --no-tree-shake-icons \
   --build-name=$VERSION \
-  --build-number=$BUILD_NUMBER
+  --build-number=$BUILD_NUMBER \
+  "${DART_DEFINES[@]}"
 
 # Step 2: Create archive
 echo ""

@@ -3,16 +3,31 @@
 # Build Reconnect for TestFlight
 # Usage: ./scripts/build_testflight.sh <VERSION> <BUILD_NUMBER>
 # Example: ./scripts/build_testflight.sh 0.1.0 1
+#
+# Environment:
+#   FLAVOR                   prod (default) or staging. "dev" is rejected: a release
+#                            build must never point at localhost.
+#   RECONNECT_API_BASE_URL   optional https URL overriding the flavor's default host.
 
 set -e
 
 VERSION=${1:-0.1.0}
 BUILD_NUMBER=${2:-1}
+FLAVOR=${FLAVOR:-prod}
+if [[ "$FLAVOR" != "prod" && "$FLAVOR" != "staging" ]]; then
+  echo "FLAVOR must be prod or staging for a release build (got '$FLAVOR')" >&2
+  exit 1
+fi
+DART_DEFINES=(--dart-define=FLAVOR="$FLAVOR")
+if [[ -n "${RECONNECT_API_BASE_URL:-}" ]]; then
+  DART_DEFINES+=(--dart-define=RECONNECT_API_BASE_URL="$RECONNECT_API_BASE_URL")
+fi
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "🏗️  Building Reconnect for TestFlight"
 echo "Version: $VERSION"
 echo "Build Number: $BUILD_NUMBER"
+echo "Flavor: $FLAVOR"
 echo ""
 
 # Clean previous builds
@@ -36,6 +51,7 @@ flutter build ios \
   --no-tree-shake-icons \
   --build-name=$VERSION \
   --build-number=$BUILD_NUMBER \
+  "${DART_DEFINES[@]}" \
   -v
 
 echo ""

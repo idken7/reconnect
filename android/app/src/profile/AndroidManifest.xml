@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Profile builds default to the dev flavor, which talks to the local dev server over HTTP. -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>
