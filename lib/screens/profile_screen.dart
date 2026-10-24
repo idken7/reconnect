@@ -163,7 +163,7 @@ class _ProfileListRow extends StatelessWidget {
             Text(emoji, style: const TextStyle(fontSize: 15)),
             const SizedBox(width: 12),
             Expanded(child: Text(label, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
-            if (trailing != null) trailing!,
+            ?trailing,
             if (showChevron)
               const Icon(Icons.chevron_right_rounded, color: ReconnectColors.mutedTextStrong),
           ],

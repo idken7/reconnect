@@ -50,7 +50,7 @@ void main() {
             isImporting: false,
             statusMessage: null,
             onImportContacts: () {},
-            onPreferenceChanged: (_, __) {},
+            onPreferenceChanged: (_, _) {},
           ),
         ),
       );
@@ -71,7 +71,7 @@ void main() {
             isImporting: false,
             statusMessage: null,
             onImportContacts: () {},
-            onPreferenceChanged: (_, __) {},
+            onPreferenceChanged: (_, _) {},
           ),
         ),
       );
@@ -91,7 +91,7 @@ void main() {
             isImporting: false,
             statusMessage: null,
             onImportContacts: () {},
-            onPreferenceChanged: (_, __) {},
+            onPreferenceChanged: (_, _) {},
           ),
         ),
       );
