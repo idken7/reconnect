@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'theme/reconnect_theme.dart';
+import 'utils/relative_time.dart';
 
 export 'models/activity_suggestion.dart';
 export 'models/conversation_starter.dart';
@@ -99,6 +100,9 @@ class ReconnectProfile {
     required this.bio,
     this.profileImageUrl = '',
     this.birthday,
+    this.emailVerified = false,
+    this.phoneVerified = false,
+    this.locationShared = false,
   });
 
   factory ReconnectProfile.fromJson(Map<String, dynamic> json) {
@@ -110,6 +114,9 @@ class ReconnectProfile {
       bio: json['bio'] as String? ?? '',
       profileImageUrl: json['profileImageUrl'] as String? ?? '',
       birthday: json['birthday'] != null ? DateTime.tryParse(json['birthday'] as String) : null,
+      emailVerified: json['emailVerified'] as bool? ?? false,
+      phoneVerified: json['phoneVerified'] as bool? ?? false,
+      locationShared: json['locationShared'] as bool? ?? false,
     );
   }
 
@@ -120,6 +127,9 @@ class ReconnectProfile {
   final String bio;
   final String profileImageUrl;
   final DateTime? birthday;
+  final bool emailVerified;
+  final bool phoneVerified;
+  final bool locationShared;
 
   Map<String, dynamic> toJson() {
     return {
@@ -130,6 +140,9 @@ class ReconnectProfile {
       'bio': bio,
       'profileImageUrl': profileImageUrl,
       'birthday': birthday?.toIso8601String(),
+      'emailVerified': emailVerified,
+      'phoneVerified': phoneVerified,
+      'locationShared': locationShared,
     };
   }
 
@@ -141,6 +154,9 @@ class ReconnectProfile {
     String? bio,
     String? profileImageUrl,
     DateTime? birthday,
+    bool? emailVerified,
+    bool? phoneVerified,
+    bool? locationShared,
   }) {
     return ReconnectProfile(
       name: name ?? this.name,
@@ -150,6 +166,9 @@ class ReconnectProfile {
       bio: bio ?? this.bio,
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       birthday: birthday ?? this.birthday,
+      emailVerified: emailVerified ?? this.emailVerified,
+      phoneVerified: phoneVerified ?? this.phoneVerified,
+      locationShared: locationShared ?? this.locationShared,
     );
   }
 }
@@ -166,6 +185,8 @@ class ReconnectContact {
     required this.preference,
     this.birthday,
     this.lastContacted,
+    this.lastSeenAt,
+    this.mutual = false,
   });
 
   factory ReconnectContact.fromJson(Map<String, dynamic> json) {
@@ -176,6 +197,8 @@ class ReconnectContact {
       phone: json['phone'] as String? ?? '',
       isOnApp: json['isOnApp'] as bool? ?? false,
       lastSeen: json['lastSeen'] as String? ?? '',
+      lastSeenAt: json['lastSeenAt'] != null ? DateTime.tryParse(json['lastSeenAt'] as String) : null,
+      mutual: json['mutual'] as bool? ?? false,
       availableIn: (json['availableIn'] as List<dynamic>? ?? const <dynamic>[])
           .map((entry) => entry.toString())
           .toList(growable: false),
@@ -193,11 +216,26 @@ class ReconnectContact {
   final String email;
   final String phone;
   final bool isOnApp;
+
+  /// Legacy free-text "last seen" string. Prefer [lastSeenLabel].
   final String lastSeen;
+
+  /// When the matched user was last seen (server timestamp), if known.
+  final DateTime? lastSeenAt;
+  final bool mutual;
   final List<String> availableIn;
   final ReconnectPreference preference;
   final DateTime? birthday;
   final DateTime? lastContacted;
+
+  /// Human readable "last seen" text: relative time derived from
+  /// [lastSeenAt] (e.g. "2 weeks ago"), else the legacy string, else "Unknown".
+  String get lastSeenLabel {
+    if (lastSeenAt != null) {
+      return formatRelativeTime(lastSeenAt);
+    }
+    return lastSeen.isNotEmpty ? lastSeen : 'Unknown';
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -206,7 +244,9 @@ class ReconnectContact {
       'email': email,
       'phone': phone,
       'isOnApp': isOnApp,
+      'mutual': mutual,
       'lastSeen': lastSeen,
+      'lastSeenAt': lastSeenAt?.toUtc().toIso8601String(),
       'availableIn': availableIn,
       'preference': preference.name,
       'birthday': birthday?.toIso8601String(),
@@ -221,6 +261,8 @@ class ReconnectContact {
     String? phone,
     bool? isOnApp,
     String? lastSeen,
+    DateTime? lastSeenAt,
+    bool? mutual,
     List<String>? availableIn,
     ReconnectPreference? preference,
     DateTime? birthday,
@@ -233,6 +275,8 @@ class ReconnectContact {
       phone: phone ?? this.phone,
       isOnApp: isOnApp ?? this.isOnApp,
       lastSeen: lastSeen ?? this.lastSeen,
+      lastSeenAt: lastSeenAt ?? this.lastSeenAt,
+      mutual: mutual ?? this.mutual,
       availableIn: availableIn ?? this.availableIn,
       preference: preference ?? this.preference,
       birthday: birthday ?? this.birthday,
@@ -390,7 +434,7 @@ class MatchCandidate {
   factory MatchCandidate.fromJson(Map<String, dynamic> json) {
     return MatchCandidate(
       name: json['name'] as String? ?? '',
-      status: json['status'] as String?,
+      status: _statusLabel(json['status'] as String?),
       contact: json.containsKey('id') ? ReconnectContact.fromJson(json) : null,
     );
   }
@@ -398,6 +442,9 @@ class MatchCandidate {
   final String name;
   final String? status;
   final ReconnectContact? contact;
+
+  /// The API reports `notOnApp`; the UI shows a friendly label.
+  static String? _statusLabel(String? status) => status == 'notOnApp' ? 'Not on app' : status;
 }
 
 class ContactMatches {

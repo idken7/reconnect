@@ -417,7 +417,7 @@ class _ContactChip extends StatelessWidget {
               children: [
                 Text(contact.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                 Text(
-                  contact.lastSeen,
+                  contact.lastSeenLabel,
                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 10, color: ReconnectColors.mutedTextStrong),
                 ),
               ],
