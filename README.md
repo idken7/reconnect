@@ -89,9 +89,7 @@ cd ..
 flutter run
 ```
 
-Then use test credentials:
-- Email: `avery@example.com`
-- Password: `password123`
+Then sign up with any test email, phone, and a password of 8+ characters (there is no pre-seeded account).
 
 ## Backend URLs
 
@@ -138,7 +136,7 @@ flutter run -d android
 ```
 
 4. Test auth + reconnect flow:
-   - Sign in with `avery@example.com` / `password123`
+   - Sign up with a test account
    - Complete onboarding
    - Import contacts
    - Open Matches tab and verify grouped results
@@ -190,9 +188,7 @@ flutter devices
 flutter run -d ios
 ```
 
-5. Test the same auth/import/matches/location flow as Android using:
-   - Email: `avery@example.com`
-   - Password: `password123`
+5. Test the same auth/import/matches/location flow as Android using a test account created via signup.
 
 ## Full Validation Commands
 
