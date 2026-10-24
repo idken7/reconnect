@@ -1,0 +1,17 @@
+.dart_tool/
+.git/
+.gitignore
+.dockerignore
+Dockerfile
+fly.toml
+build/
+coverage/
+data/
+test/
+*.md
+.env
+.env.*
+*.iml
+.idea/
+.vscode/
+.DS_Store
