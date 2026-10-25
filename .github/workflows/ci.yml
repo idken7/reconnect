@@ -6,7 +6,21 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  FLUTTER_VERSION: '3.41.9'
+
 jobs:
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   analyze-and-test:
     name: Analyze & test (Flutter)
     runs-on: ubuntu-latest
@@ -14,6 +28,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
       - run: flutter pub get
       - run: flutter analyze --fatal-infos
@@ -24,39 +39,87 @@ jobs:
           path: coverage/lcov.info
 
   build-android:
-    name: Build (Android debug)
+    name: Build (Android release APK)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
       - run: flutter pub get
-      - run: flutter build apk --debug
+      - run: flutter build apk --release
 
   build-ios:
-    name: Build (iOS debug, no codesign)
+    name: Build (iOS release, no codesign)
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
       - run: flutter pub get
-      - run: flutter build ios --debug --no-codesign
+      - run: flutter build ios --release --no-codesign
 
   backend-test:
-    name: Test (backend)
+    name: Analyze & test (backend + Postgres)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: reconnect
+          POSTGRES_PASSWORD: reconnect
+          POSTGRES_DB: reconnect_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U reconnect"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://reconnect:reconnect@localhost:5432/reconnect_test?sslmode=disable
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
       - run: dart pub get
+      - run: dart analyze --fatal-infos
       - run: dart test
+
+  backend-image:
+    name: Build (backend Docker image)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t reconnect-backend:ci backend
+
+  web-site:
+    name: Check (static site)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No external requests or broken local links
+        run: |
+          test -d web-site
+          ! grep -rEn 'https?://(cdn|fonts|www\.google|ajax)' web-site --include='*.html' --include='*.css'
+          python3 - <<'PY'
+          import pathlib, re, sys
+          root = pathlib.Path('web-site')
+          bad = []
+          for page in root.glob('*.html'):
+              for href in re.findall(r'(?:href|src)="([^"#?]+)', page.read_text()):
+                  if href.startswith(('http', 'mailto:', 'data:', '/')):
+                      continue
+                  if not (root / href).exists():
+                      bad.append(f'{page}: {href}')
+          print('\n'.join(bad)); sys.exit(1 if bad else 0)
+          PY

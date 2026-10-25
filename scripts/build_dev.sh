@@ -19,7 +19,9 @@ flutter pub get
 echo "📦 Building for iOS (dev environment)..."
 flutter build ios \
   --debug \
-  -d "FLAVOR=dev" \
+  --no-codesign \
+  --dart-define=FLAVOR=dev \
+  ${RECONNECT_API_BASE_URL:+--dart-define=RECONNECT_API_BASE_URL=$RECONNECT_API_BASE_URL} \
   -v
 
 echo ""

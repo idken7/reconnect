@@ -1,21 +1,28 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'app_state.dart';
 import 'screens/contact_detail_screen.dart';
 import 'screens/contact_matches_screen.dart';
 import 'screens/contacts_screen.dart';
 import 'screens/edit_profile_screen.dart';
+import 'screens/load_error_screen.dart';
 import 'screens/nearby_screen.dart';
 import 'screens/onboarding_flow.dart';
 import 'screens/profile_screen.dart';
 import 'screens/spin_wheel_screen.dart';
+import 'screens/verification_screen.dart';
 import 'theme/reconnect_theme.dart';
 import 'widgets/reconnect_nav_bar.dart';
+import 'widgets/verification_panel.dart';
 
 class ReconnectApp extends StatefulWidget {
-  const ReconnectApp({super.key});
+  /// [appState] is for tests; the app creates (and disposes) its own otherwise.
+  const ReconnectApp({super.key, this.appState});
+
+  final ReconnectAppState? appState;
 
   @override
   State<ReconnectApp> createState() => _ReconnectAppState();
@@ -33,12 +40,15 @@ class _ReconnectAppState extends State<ReconnectApp> {
   // below (e.g. _HomePage) listens to appState directly, so a change like
   // switching tabs or updating a preference no longer rebuilds the whole
   // MaterialApp.
-  late (bool loading, bool authenticated, bool needsOnboarding) _mode;
+  late (bool loading, bool authenticated, bool needsOnboarding, bool loadFailed) _mode;
+
+  // Lets us drop any pushed screens or dialogs when the session ends.
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
     super.initState();
-    appState = ReconnectAppState();
+    appState = widget.appState ?? ReconnectAppState();
     _mode = _currentMode();
     appState.addListener(_handleStateChange);
     theme = buildReconnectTheme();
@@ -47,17 +57,27 @@ class _ReconnectAppState extends State<ReconnectApp> {
   @override
   void dispose() {
     appState.removeListener(_handleStateChange);
-    appState.dispose();
+    if (widget.appState == null) {
+      appState.dispose();
+    }
     super.dispose();
   }
 
-  (bool, bool, bool) _currentMode() =>
-      (appState.isLoading, appState.isAuthenticated, appState.requiresOnboarding);
+  (bool, bool, bool, bool) _currentMode() =>
+      (appState.isLoading, appState.isAuthenticated, appState.requiresOnboarding, appState.loadFailed);
 
   void _handleStateChange() {
     final mode = _currentMode();
     if (mode != _mode) {
+      final signedOut = _mode.$2 && !mode.$2;
       setState(() => _mode = mode);
+      if (signedOut) {
+        // Logout, revoked session or deleted account: close anything that
+        // was pushed on top of the old home screen.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _navigatorKey.currentState?.popUntil((route) => route.isFirst);
+        });
+      }
     }
   }
 
@@ -65,6 +85,7 @@ class _ReconnectAppState extends State<ReconnectApp> {
   Widget build(BuildContext context) {
     if (appState.isLoading) {
       return MaterialApp(
+        navigatorKey: _navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Reconnect',
         theme: theme,
@@ -78,6 +99,7 @@ class _ReconnectAppState extends State<ReconnectApp> {
 
     if (!appState.isAuthenticated || appState.requiresOnboarding) {
       return MaterialApp(
+        navigatorKey: _navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Reconnect',
         theme: theme,
@@ -85,7 +107,18 @@ class _ReconnectAppState extends State<ReconnectApp> {
       );
     }
 
+    if (appState.loadFailed) {
+      return MaterialApp(
+        navigatorKey: _navigatorKey,
+        debugShowCheckedModeBanner: false,
+        title: 'Reconnect',
+        theme: theme,
+        home: LoadErrorScreen(appState: appState),
+      );
+    }
+
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Reconnect',
       theme: theme,
@@ -219,8 +252,30 @@ class _HomePageState extends State<_HomePage> {
             );
           },
           onSpinWheel: _openSpin,
+          isDemoMode: appState.isDemoMode,
+          // Account actions only make sense with a real account.
+          onToggleLocationShared: appState.isDemoMode ? null : (shared) => unawaited(appState.setLocationShared(shared)),
+          onVerifyPhone: appState.isDemoMode ? null : () => _openVerification(VerificationKind.phone),
+          onVerifyEmail: appState.isDemoMode ? null : () => _openVerification(VerificationKind.email),
+          onLogout: appState.logout,
+          onLogoutEverywhere: appState.isDemoMode ? null : appState.logoutEverywhere,
+          onExportData: appState.isDemoMode ? null : _exportData,
+          onDeleteAccount: appState.isDemoMode ? null : (password) => appState.deleteAccount(password: password),
         );
     }
+  }
+
+  void _openVerification(VerificationKind kind) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => VerificationScreen(appState: widget.appState, kind: kind),
+      ),
+    );
+  }
+
+  Future<void> _exportData() async {
+    final json = await widget.appState.exportAccountData();
+    await SharePlus.instance.share(ShareParams(text: json, subject: 'My Reconnect data'));
   }
 
   Widget _buildSpinTab(BuildContext context) {

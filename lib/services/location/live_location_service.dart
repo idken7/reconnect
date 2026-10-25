@@ -38,7 +38,7 @@ class LiveLocationService {
     }
 
     final position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.low,
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
     );
 
     return LiveCoordinates(latitude: position.latitude, longitude: position.longitude);
