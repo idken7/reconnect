@@ -85,7 +85,7 @@ CREATE INDEX user_contacts_hash_idx ON user_contacts (identifier_hash);
 CREATE TABLE contact_preferences (
   user_id         text NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   target_user_id  text NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-  preference      text NOT NULL CHECK (preference IN ('loveToSee', 'neutral', 'ratherAvoid')),
+  preference      text NOT NULL CHECK (preference IN ('loveToSee', 'like', 'neutral', 'dislike', 'ratherAvoid')),
   updated_at      timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (user_id, target_user_id)
 );

@@ -1,7 +1,7 @@
 const List<String> supportedLocations = <String>['Brooklyn', 'Manhattan', 'Austin', 'Chicago', 'Other'];
 const String otherLocation = 'Other';
 
-const List<String> preferenceValues = <String>['loveToSee', 'neutral', 'ratherAvoid'];
+const List<String> preferenceValues = <String>['loveToSee', 'like', 'neutral', 'dislike', 'ratherAvoid'];
 
 class User {
   const User({

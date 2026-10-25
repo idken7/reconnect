@@ -88,7 +88,7 @@ All auth-session responses share this shape (`SessionResponse`). `token` is a le
   "mutual": true,
   "lastSeenAt": "ISO8601 or null",
   "availableIn": ["Brooklyn"],
-  "preference": "loveToSee | neutral | ratherAvoid"
+  "preference": "loveToSee | like | neutral | dislike | ratherAvoid"
 }
 ```
 

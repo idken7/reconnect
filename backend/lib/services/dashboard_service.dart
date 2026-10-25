@@ -142,7 +142,9 @@ class DashboardService {
 
   int _weight(String? preference) => switch (preference) {
         'loveToSee' => 0,
-        'ratherAvoid' => 2,
-        _ => 1,
+        'like' => 1,
+        'dislike' => 3,
+        'ratherAvoid' => 4,
+        _ => 2,
       };
 }
