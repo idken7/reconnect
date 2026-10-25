@@ -34,13 +34,18 @@ class ReconnectAppState extends ChangeNotifier {
     _dashboard = _emptyDashboard();
     // Persist rotated refresh tokens the moment they are issued: the old one
     // is dead as soon as the server rotates it.
-    this.apiClient.onSessionRefreshed = (session) {
+    this.apiClient.onSessionRefreshed = (session) async {
       _authToken = session.accessToken;
-      unawaited(_persistSession(
-        accessToken: session.accessToken,
-        refreshToken: session.refreshToken,
-        expiresAt: session.accessTokenExpiresAt,
-      ));
+      try {
+        await _persistSession(
+          accessToken: session.accessToken,
+          refreshToken: session.refreshToken,
+          expiresAt: session.accessTokenExpiresAt,
+        );
+      } catch (error) {
+        // The in-memory session still works for this run.
+        debugPrint('Could not persist refreshed session: ${error.runtimeType}');
+      }
     };
     // Initialize feature services
     randomContactService = RandomContactService();

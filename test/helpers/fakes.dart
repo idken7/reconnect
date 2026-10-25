@@ -224,6 +224,7 @@ class FakeApiClient extends ReconnectApiClient {
 
   @override
   Future<ReconnectDashboardData> updateProfile({
+    String? name,
     String? bio,
     String? homeCity,
     String? profileImageUrl,
@@ -232,6 +233,7 @@ class FakeApiClient extends ReconnectApiClient {
     return _call('updateProfile', () {
       dashboard = dashboard.copyWith(
         profile: dashboard.profile.copyWith(
+          name: name,
           bio: bio,
           homeCity: homeCity,
           profileImageUrl: profileImageUrl,

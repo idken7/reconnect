@@ -25,9 +25,9 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Reconnect needs access to your contacts so it can find friends who are already on the app.</string>
+	<string>Reconnect reads the names, phone numbers and emails in your contacts and uploads them securely to find friends who are already on Reconnect. Contacts are never messaged.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Reconnect uses your location to suggest nearby friends to reconnect with.</string>
+	<string>Reconnect uses your approximate location to work out which city you are in and suggest nearby friends to reconnect with.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

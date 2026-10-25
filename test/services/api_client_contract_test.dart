@@ -153,6 +153,29 @@ void main() {
       expect(client.currentSession?.refreshToken, 'new-refresh');
     });
 
+    test('the rotated refresh token is persisted before the request is retried', () async {
+      var persisted = false;
+      var persistedBeforeRetry = false;
+      final client = clientFor(
+        MockClient((request) async {
+          if (request.url.path == '/v1/auth/refresh') return jsonResponse(200, refreshJson);
+          if (request.headers['Authorization'] == 'Bearer old-access') {
+            return jsonResponse(401, errorBody('token_expired'));
+          }
+          persistedBeforeRetry = persisted;
+          return jsonResponse(200, dashboardJson);
+        }),
+      );
+      client.onSessionRefreshed = (session) async {
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        persisted = true;
+      };
+
+      await client.fetchDashboard(location: 'x');
+
+      expect(persistedBeforeRetry, isTrue);
+    });
+
     test('a second 401 after refreshing is not retried again', () async {
       var dashboardCalls = 0;
       final client = clientFor(

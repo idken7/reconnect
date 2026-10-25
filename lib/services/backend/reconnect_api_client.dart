@@ -69,6 +69,12 @@ class ReconnectApiException implements Exception {
       case 'refresh_token_expired':
       case 'refresh_token_reused':
         return 'Your session has ended. Please log in again.';
+      case 'delivery_unavailable':
+        return 'We could not send the code right now. Please try again in a few minutes.';
+      case 'https_required':
+        return 'That link must start with https://.';
+      case 'not_found':
+        return 'We could not find that. It may have been removed.';
       case 'payload_too_large':
         return 'That is too much data to send at once.';
     }
@@ -112,9 +118,10 @@ class ReconnectApiClient {
   DateTime? _accessTokenExpiresAt;
   Future<AuthSession>? _refreshInFlight;
 
-  /// Called after a successful token refresh so the rotated tokens can be
-  /// persisted immediately (the old refresh token is dead once rotated).
-  void Function(AuthSession session)? onSessionRefreshed;
+  /// Called (and awaited) after a successful token refresh, before any request
+  /// is retried, so the rotated refresh token is persisted first: the old one
+  /// is dead once rotated and reusing it revokes the whole session.
+  FutureOr<void> Function(AuthSession session)? onSessionRefreshed;
 
   /// 401 codes for which one `/auth/refresh` attempt is made.
   static const _refreshableCodes = {'token_expired', 'invalid_access_token', 'missing_bearer_token'};
@@ -236,7 +243,7 @@ class ReconnectApiClient {
       ),
     );
     final session = _adoptSession(_decodeObject(response));
-    onSessionRefreshed?.call(session);
+    await onSessionRefreshed?.call(session);
     return session;
   }
 
@@ -396,6 +403,7 @@ class ReconnectApiClient {
 
   /// Only the fields that are passed are sent.
   Future<ReconnectDashboardData> updateProfile({
+    String? name,
     String? bio,
     String? homeCity,
     String? profileImageUrl,
@@ -406,6 +414,7 @@ class ReconnectApiClient {
         _endpoint('/v1/profile'),
         headers: _jsonHeaders,
         body: jsonEncode({
+          'name': ?name,
           'bio': ?bio,
           'homeCity': ?homeCity,
           'profileImageUrl': ?profileImageUrl,
