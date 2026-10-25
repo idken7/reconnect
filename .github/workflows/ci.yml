@@ -87,7 +87,7 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      DATABASE_URL: postgres://reconnect:reconnect@localhost:5432/reconnect_test
+      DATABASE_URL: postgres://reconnect:reconnect@localhost:5432/reconnect_test?sslmode=disable
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
