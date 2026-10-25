@@ -201,7 +201,7 @@ class _MatchRow extends StatelessWidget {
               children: [
                 Text(item.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
                 Text(
-                  item.contact?.lastSeen ?? item.status ?? 'Not on app',
+                  item.contact?.lastSeenLabel ?? item.status ?? 'Not on app',
                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12, color: ReconnectColors.mutedText),
                 ),
               ],

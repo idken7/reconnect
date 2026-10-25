@@ -4,11 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:reconnect/app_state.dart';
 import 'package:reconnect/screens/onboarding_flow.dart';
+import 'package:reconnect/services/storage/session_store.dart';
 
 void main() {
   testWidgets('starts on the welcome step', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues(const <String, Object>{});
-    final appState = ReconnectAppState();
+    final appState = ReconnectAppState(sessionStore: InMemorySessionStore());
     addTearDown(appState.dispose);
 
     await tester.pumpWidget(MaterialApp(home: OnboardingFlow(appState: appState)));
@@ -20,7 +21,7 @@ void main() {
 
   testWidgets('advances to the account creation step', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues(const <String, Object>{});
-    final appState = ReconnectAppState();
+    final appState = ReconnectAppState(sessionStore: InMemorySessionStore());
     addTearDown(appState.dispose);
 
     await tester.pumpWidget(MaterialApp(home: OnboardingFlow(appState: appState)));

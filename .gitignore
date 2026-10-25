@@ -11,3 +11,9 @@ coverage/
 
 # Local backend data (never commit)
 backend/data/
+
+# Android release signing: never commit keystores or their passwords
+key.properties
+**/key.properties
+*.jks
+*.keystore

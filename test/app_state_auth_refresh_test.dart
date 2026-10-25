@@ -5,6 +5,7 @@ import 'package:reconnect/models.dart';
 import 'package:reconnect/services/backend/reconnect_api_client.dart';
 import 'package:reconnect/services/contacts/contact_import_service.dart';
 import 'package:reconnect/services/location/live_location_service.dart';
+import 'package:reconnect/services/storage/session_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FakeContactImportService extends ContactImportService {
@@ -103,11 +104,16 @@ void main() {
 
   test('startup silently refreshes expired token', () async {
     SharedPreferences.setMockInitialValues({
-      'reconnect_auth_token': 'expired-access',
-      'reconnect_refresh_token': 'refresh-token',
-      'reconnect_auth_token_expiry': DateTime.now().toUtc().subtract(const Duration(minutes: 1)).toIso8601String(),
       'reconnect_onboarding_complete': true,
+      LegacyTokenMigration.initializedKey: true,
     });
+    final store = InMemorySessionStore(
+      StoredSession(
+        accessToken: 'expired-access',
+        refreshToken: 'refresh-token',
+        accessTokenExpiresAt: DateTime.now().toUtc().subtract(const Duration(minutes: 1)),
+      ),
+    );
 
     final apiClient = FakeApiClient(
       expired: true,
@@ -122,6 +128,7 @@ void main() {
       contactImportService: const FakeContactImportService(),
       liveLocationService: const FakeLiveLocationService(),
       seedRepository: seedRepo,
+      sessionStore: store,
     );
 
     await Future<void>.delayed(const Duration(milliseconds: 120));
@@ -129,15 +136,22 @@ void main() {
     expect(apiClient.refreshCalled, true);
     expect(appState.isAuthenticated, true);
     expect(appState.requiresOnboarding, false);
+    expect((await store.read())?.accessToken, 'new-access');
+    expect((await store.read())?.refreshToken, 'new-refresh');
   });
 
   test('startup clears session when refresh fails', () async {
     SharedPreferences.setMockInitialValues({
-      'reconnect_auth_token': 'expired-access',
-      'reconnect_refresh_token': 'expired-refresh',
-      'reconnect_auth_token_expiry': DateTime.now().toUtc().subtract(const Duration(minutes: 1)).toIso8601String(),
       'reconnect_onboarding_complete': true,
+      LegacyTokenMigration.initializedKey: true,
     });
+    final store = InMemorySessionStore(
+      StoredSession(
+        accessToken: 'expired-access',
+        refreshToken: 'expired-refresh',
+        accessTokenExpiresAt: DateTime.now().toUtc().subtract(const Duration(minutes: 1)),
+      ),
+    );
 
     final apiClient = FakeApiClient(
       expired: true,
@@ -152,6 +166,7 @@ void main() {
       contactImportService: const FakeContactImportService(),
       liveLocationService: const FakeLiveLocationService(),
       seedRepository: seedRepo,
+      sessionStore: store,
     );
 
     await Future<void>.delayed(const Duration(milliseconds: 120));
@@ -159,5 +174,6 @@ void main() {
     expect(apiClient.refreshCalled, true);
     expect(appState.isAuthenticated, false);
     expect(appState.requiresOnboarding, true);
+    expect(await store.read(), isNull);
   });
 }
